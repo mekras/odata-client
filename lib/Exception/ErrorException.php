@@ -19,13 +19,14 @@ class ErrorException extends RuntimeException
     /**
      * Creates exception from server error data
      *
-     * @param array $errorData
+     * @param array $errorData raw error data
+     * @param int   $code      HTTP code
      *
      * @return ErrorException
      *
      * @since x.xx
      */
-    public static function createFromArray(array $errorData)
+    public static function createFromArray(array $errorData, $code = 0)
     {
         $message = '(unknown)';
         if (array_key_exists('message', $errorData)) {
@@ -36,7 +37,9 @@ class ErrorException extends RuntimeException
                 $message = strval($message);
             }
         }
-        $code = array_key_exists('code', $errorData) ? intval($errorData['code']) : 0;
+        if (array_key_exists('code', $errorData)) {
+            $code = intval($errorData['code']);
+        }
         $message = rtrim($message, '.!') . '.';
         return new static($message, $code);
     }

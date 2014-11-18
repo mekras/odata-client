@@ -40,4 +40,29 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $result = $service->retrieve('/foo');
         $this->assertEquals(['foo' => 'bar'], $result);
     }
+
+    /**
+     * @expectedException \Mekras\OData\Client\Exception\ClientErrorException
+     * @expectedExceptionCode 404
+     */
+    public function testRetrieveClientError()
+    {
+        $body = $this
+            ->getMockForAbstractClass('Mekras\Interfaces\Http\Message\StreamableInterface');
+        $body->expects($this->any())->method('getContents')->willReturn('{"error":{}}');
+
+        $response = $this
+            ->getMockForAbstractClass('Mekras\Interfaces\Http\Message\ResponseInterface');
+        $response->expects($this->any())->method('getStatusCode')->willReturn(404);
+        $response->expects($this->any())->method('getBody')->willReturn($body);
+        $response->expects($this->any())->method('getHeader')->willReturn('application/json');
+
+        $http = $this->getMockForAbstractClass('Mekras\Interfaces\Http\Client\HttpClientInterface');
+        $http->expects($this->once())->method('get')->with('http://example.com/foo')
+            ->willReturn($response);
+        /** @var \Mekras\Interfaces\Http\Client\HttpClientInterface $http */
+
+        $service = new Service('http://example.com', $http);
+        $service->retrieve('/foo');
+    }
 }

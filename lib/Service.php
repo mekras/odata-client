@@ -8,6 +8,10 @@
 namespace Mekras\OData\Client;
 
 use Mekras\Interfaces\Http\Client\HttpClientInterface;
+use Mekras\Interfaces\Http\Message\ResponseInterface;
+use Mekras\OData\Client\Exception\ClientErrorException;
+use Mekras\OData\Client\Exception\ErrorException;
+use Mekras\OData\Client\Exception\ServerErrorException;
 use Mekras\OData\Client\Mapper\DefaultMapper;
 use Mekras\OData\Client\Mapper\ObjectMapperInterface;
 use Mekras\OData\Client\Object\ODataObject;
@@ -28,11 +32,11 @@ class Service
     const MAX_VERSION = '2.0';
 
     /**
-     * Service base URL
+     * Service root URI
      *
      * @var string
      */
-    private $baseUrl;
+    private $serviceRootUri;
 
     /**
      * Клиент HTTP
@@ -65,18 +69,20 @@ class Service
     /**
      * Creates new OData service proxy
      *
-     * @param string              $baseUrl    OData service base URL
+     * @param string $serviceRootUri          OData service root URI
      * @param HttpClientInterface $httpClient HTTP client to use
-     * @param LoggerInterface     $logger     Logger (optional)
+     * @param LoggerInterface $logger         Logger (optional)
      *
      * @since x.xx
+     *
+     * @link  http://www.odata.org/documentation/odata-version-2-0/uri-conventions#ServiceRootUri
      */
     public function __construct(
-        $baseUrl,
+        $serviceRootUri,
         HttpClientInterface $httpClient,
         LoggerInterface $logger = null
     ) {
-        $this->baseUrl = $baseUrl;
+        $this->serviceRootUri = rtrim($serviceRootUri, '/');
         $this->httpClient = $httpClient;
         $this->parsers = new ParserFactory();
         //$this->mapper = new DefaultMapper();
@@ -94,7 +100,7 @@ class Service
      */
     public function retrieve($uri)
     {
-        $result = $this->request('GET', $this->baseUrl . $uri);
+        $result = $this->request('GET', $this->serviceRootUri . $uri);
         return $result;
     }
 
@@ -121,6 +127,7 @@ class Service
      *
      * @throws \LogicException
      * @throws \RuntimeException
+     * @throws ErrorException
      *
      * @return array TODO ODataObject
      */
@@ -154,8 +161,36 @@ class Service
             throw new \RuntimeException(sprintf('Unsupported content type "%s"', $contentType));
         }
 
-        $array = $parser->parse($response->getBody()->getContents());
+        $rawData = $parser->parse($response->getBody()->getContents());
 
-        return $array;//$this->mapper->map($array);
+        if ($response->getStatusCode() >= 400 && $response->getStatusCode() < 600) {
+            throw $this->createErrorException($response, $rawData);
+        }
+
+        return $rawData;//$this->mapper->map($array);
+    }
+
+    /**
+     * Creates error exception from response and parsed raw data
+     *
+     * @param ResponseInterface $response
+     * @param array             $rawData
+     *
+     * @return ErrorException
+     */
+    private function createErrorException(ResponseInterface $response, array $rawData)
+    {
+        if ($response->getStatusCode() < 500) {
+            $exception = ClientErrorException::createFromArray(
+                $rawData,
+                $response->getStatusCode()
+            );
+        } else {
+            $exception = ServerErrorException::createFromArray(
+                $rawData,
+                $response->getStatusCode()
+            );
+        }
+        return $exception;
     }
 }
