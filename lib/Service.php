@@ -79,7 +79,7 @@ class Service
         $this->baseUrl = $baseUrl;
         $this->httpClient = $httpClient;
         $this->parsers = new ParserFactory();
-        $this->mapper = new DefaultMapper();
+        //$this->mapper = new DefaultMapper();
         $this->logger = $logger ?: new NullLogger();
     }
 
