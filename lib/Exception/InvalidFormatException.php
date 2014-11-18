@@ -26,6 +26,8 @@ class InvalidFormatException extends RuntimeException
      * @param Exception $previous previous exception
      *
      * @return InvalidFormatException
+     *
+     * @since x.xx
      */
     public static function create($format, $data = null, $error = null, Exception $previous = null)
     {
