@@ -1,6 +1,6 @@
 <?php
 /**
- * OData service JSON response parser
+ * OData client library
  *
  * @author  Михаил Красильников <m.krasilnikov@yandex.ru>
  * @license MIT
@@ -19,7 +19,7 @@ class JsonParser implements ResponseParserInterface
     /**
      * Parses response and returns object
      *
-     * @param $string
+     * @param string $string
      *
      * @throws InvalidFormatException
      *
@@ -30,12 +30,10 @@ class JsonParser implements ResponseParserInterface
     public function parse($string)
     {
         $array = json_decode($string, true);
-        if (!is_array($array))
-        {
+        if (!is_array($array)) {
             $error = function_exists('json_last_error_msg') ? json_last_error_msg() : null;
             throw InvalidFormatException::create('JSON', $string, $error);
         }
         return $array;
     }
 }
- 

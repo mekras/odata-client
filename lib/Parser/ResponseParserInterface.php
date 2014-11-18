@@ -1,6 +1,6 @@
 <?php
 /**
- * OData service response parser interface
+ * OData client library
  *
  * @author  Михаил Красильников <m.krasilnikov@yandex.ru>
  * @license MIT
@@ -17,7 +17,7 @@ interface ResponseParserInterface
     /**
      * Parses response and returns object
      *
-     * @param $string
+     * @param string $string
      *
      * @return array
      *

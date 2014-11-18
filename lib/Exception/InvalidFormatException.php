@@ -1,6 +1,6 @@
 <?php
 /**
- * Invalid format exception
+ * OData client library
  *
  * @author  Михаил Красильников <m.krasilnikov@yandex.ru>
  * @license MIT
@@ -29,11 +29,9 @@ class InvalidFormatException extends RuntimeException
      */
     public static function create($format, $data = null, $error = null, Exception $previous = null)
     {
-        if ($data)
-        {
+        if ($data) {
             $data = strval($data);
-            if (mb_strlen($data, 'utf-8') > 64)
-            {
+            if (mb_strlen($data, 'utf-8') > 64) {
                 $data = mb_substr($data, 0, 64, 'utf-8') . '…';
             }
             $data = ' in "' . $data . '"';

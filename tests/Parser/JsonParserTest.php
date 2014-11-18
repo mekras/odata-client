@@ -1,6 +1,9 @@
 <?php
 /**
- * Tests for Mekras\OData\Client\Parser\JsonParser
+ * OData client library
+ *
+ * @author  Михаил Красильников <m.krasilnikov@yandex.ru>
+ * @license MIT
  */
 namespace Mekras\OData\Client\Tests\Parser;
 
