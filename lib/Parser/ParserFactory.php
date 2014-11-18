@@ -1,6 +1,6 @@
 <?php
 /**
- * Parser factory
+ * OData client library
  *
  * @author  Михаил Красильников <m.krasilnikov@yandex.ru>
  * @license MIT
@@ -18,7 +18,6 @@ class ParserFactory
      * Response parsers
      *
      * @var ResponseParserInterface[]
-     * @since x.xx
      */
     private $parsers = [];
 
@@ -33,10 +32,8 @@ class ParserFactory
      */
     public function getParserFor($contentType)
     {
-        if (!array_key_exists($contentType, $this->parsers))
-        {
-            switch ($contentType)
-            {
+        if (!array_key_exists($contentType, $this->parsers)) {
+            switch ($contentType) {
                 case 'application/json':
                     $this->parsers[$contentType] = new JsonParser();
                     break;

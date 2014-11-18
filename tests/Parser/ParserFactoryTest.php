@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for Mekras\OData\Client\Parser\ParserFactory
+ * OData client library
  */
 namespace Mekras\OData\Client\Tests\Parser;
 
