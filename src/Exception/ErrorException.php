@@ -7,12 +7,10 @@
  */
 namespace Mekras\OData\Client\Exception;
 
-use RuntimeException;
-
 /**
  * Server issued error
  *
- * @since x.xx
+ * @since 1.0
  */
 class ErrorException extends RuntimeException
 {
@@ -24,7 +22,7 @@ class ErrorException extends RuntimeException
      *
      * @return ErrorException
      *
-     * @since x.xx
+     * @since 1.0
      */
     public static function createFromArray(array $errorData, $code = 0)
     {
@@ -34,13 +32,14 @@ class ErrorException extends RuntimeException
             if (is_array($message) && array_key_exists('value', $message)) {
                 $message = $message['value'];
             } else {
-                $message = strval($message);
+                $message = (string) $message;
             }
         }
         if (array_key_exists('code', $errorData)) {
-            $code = intval($errorData['code']);
+            $code = (int) $errorData['code'];
         }
         $message = rtrim($message, '.!') . '.';
+
         return new static($message, $code);
     }
 }

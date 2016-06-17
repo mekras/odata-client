@@ -8,8 +8,8 @@
 namespace Mekras\OData\Client\Exception;
 
 /**
- * Server error
+ * OData exception.
  */
-class ServerErrorException extends ErrorException
+interface ODataException
 {
 }

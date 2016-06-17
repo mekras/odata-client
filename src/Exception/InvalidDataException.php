@@ -8,8 +8,8 @@
 namespace Mekras\OData\Client\Exception;
 
 /**
- * Client error
+ * Invalid OData data.
  */
-class ClientErrorException extends ErrorException
+class InvalidDataException extends RuntimeException
 {
 }

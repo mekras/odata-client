@@ -7,40 +7,48 @@
  */
 namespace Mekras\OData\Client\Parser;
 
+use Mekras\OData\Client\Exception\UnsupportedException;
+
 /**
- * Parser factory
+ * Parser factory.
  *
- * @since x.xx
+ * @since 1.0
  */
 class ParserFactory
 {
     /**
      * Response parsers
      *
-     * @var ResponseParserInterface[]
+     * @var ResponseParser[]
      */
     private $parsers = [];
 
     /**
-     * Returns response parser
+     * Returns response parser for the given content type
      *
      * @param string $contentType
      *
-     * @return ResponseParserInterface|null
+     * @return ResponseParser
      *
-     * @since x.xx
+     * @throws \Mekras\OData\Client\Exception\UnsupportedException If $contentType not supported
+     *
+     * @since 1.0
      */
-    public function getParserFor($contentType)
+    public function getByContentType($contentType)
     {
         if (!array_key_exists($contentType, $this->parsers)) {
             switch ($contentType) {
                 case 'application/json':
                     $this->parsers[$contentType] = new JsonParser();
                     break;
+
                 default:
-                    $this->parsers[$contentType] = null;
+                    throw new UnsupportedException(
+                        'Unsupported response Content-type: ' . $contentType
+                    );
             }
         }
+
         return $this->parsers[$contentType];
     }
 }

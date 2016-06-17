@@ -6,7 +6,7 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false"
-         bootstrap="tests/bootstrap.php"
+         bootstrap="vendor/autoload.php"
 >
     <testsuites>
         <testsuite name="OData Client Test Suite">
@@ -16,7 +16,7 @@
 
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
-            <directory>lib</directory>
+            <directory>src</directory>
         </whitelist>
     </filter>
 </phpunit>

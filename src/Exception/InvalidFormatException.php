@@ -7,32 +7,29 @@
  */
 namespace Mekras\OData\Client\Exception;
 
-use Exception;
-use RuntimeException;
-
 /**
  * Invalid format exception
  *
- * @since x.xx
+ * @since 1.0
  */
 class InvalidFormatException extends RuntimeException
 {
     /**
-     * Exception factory
+     * Exception factory.
      *
-     * @param string    $format   expected format (e. g. "JSON")
-     * @param string    $data     invalid data (or only part of data)
-     * @param string    $error    error description
-     * @param Exception $previous previous exception
+     * @param string     $format   Expected format (e. g. "JSON").
+     * @param string     $data     Invalid data (or only part of data).
+     * @param string     $error    Error description.
+     * @param \Exception $previous Previous exception.
      *
      * @return InvalidFormatException
      *
      * @since x.xx
      */
-    public static function create($format, $data = null, $error = null, Exception $previous = null)
+    public static function create($format, $data = null, $error = null, \Exception $previous = null)
     {
         if ($data) {
-            $data = strval($data);
+            $data = (string) $data;
             if (mb_strlen($data, 'utf-8') > 64) {
                 $data = mb_substr($data, 0, 64, 'utf-8') . '…';
             }
@@ -40,9 +37,10 @@ class InvalidFormatException extends RuntimeException
         }
 
         $error = $error
-            ? ucfirst(strval($error))
+            ? ucfirst((string) $error)
             : ($data ? 'Unexpected data' : '');
         $message = trim("Invalid {$format}. {$error}{$data}");
+
         return new self($message, 0, $previous);
     }
 }

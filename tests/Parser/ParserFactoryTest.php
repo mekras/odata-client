@@ -17,14 +17,24 @@ use Mekras\OData\Client\Parser\ParserFactory;
 class ParserFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     *
+     * Get parser for "application/json"
      */
-    public function testBasics()
+    public function testJson()
     {
         $factory = new ParserFactory();
-        $p = $factory->getParserFor('application/json');
-        $this->assertInstanceOf('Mekras\OData\Client\Parser\JsonParser', $p);
-        $this->assertSame($p, $factory->getParserFor('application/json'));
-        $this->assertNull($factory->getParserFor('foo/bar'));
+        $parser = $factory->getByContentType('application/json');
+        static::assertInstanceOf('Mekras\OData\Client\Parser\JsonParser', $parser);
+        static::assertSame($parser, $factory->getByContentType('application/json'));
+    }
+
+    /**
+     * UnsupportedException should be thrown for unsupported content type
+     *
+     * @expectedException \Mekras\OData\Client\Exception\UnsupportedException
+     */
+    public function testUnsupportedContentType()
+    {
+        $factory = new ParserFactory();
+        $factory->getByContentType('foo/bar');
     }
 }

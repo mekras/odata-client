@@ -7,7 +7,11 @@
  */
 namespace Mekras\OData\Client\Tests;
 
+use Http\Client\HttpClient;
+use Http\Message\RequestFactory;
 use Mekras\OData\Client\Service;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Tests for Mekras\OData\Client\Service
@@ -17,52 +21,39 @@ use Mekras\OData\Client\Service;
 class ServiceTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     *
+     * Should return array
      */
-    public function testRetrieve()
+    public function testSendRequest()
     {
-        $body = $this
-            ->getMockForAbstractClass('Mekras\Interfaces\Http\Message\StreamableInterface');
-        $body->expects($this->any())->method('getContents')->willReturn('{"foo":"bar"}');
+        $response = $this->getMockForAbstractClass(ResponseInterface::class);
+        $response->expects(static::any())->method('getStatusCode')->willReturn(200);
+        $response->expects(static::any())->method('getBody')->willReturn('{"foo":"bar"}');
+        $response->expects(static::any())->method('getHeaderLine')->willReturnCallback(
+            function ($header) {
+                switch ($header) {
+                    case 'Content-type':
+                        return 'application/json';
+                    case 'DataServiceVersion':
+                        return '1.0';
+                }
+                return null;
+            }
+        );
 
-        $response = $this
-            ->getMockForAbstractClass('Mekras\Interfaces\Http\Message\ResponseInterface');
-        $response->expects($this->any())->method('getStatusCode')->willReturn(200);
-        $response->expects($this->any())->method('getBody')->willReturn($body);
-        $response->expects($this->any())->method('getHeader')->willReturn('application/json');
+        $request = $this->getMockForAbstractClass(RequestInterface::class);
 
-        $http = $this->getMockForAbstractClass('Mekras\Interfaces\Http\Client\HttpClientInterface');
-        $http->expects($this->once())->method('get')->with('http://example.com/foo')
+        $requestFactory = $this->getMockForAbstractClass(RequestFactory::class);
+        $requestFactory->expects(static::once())->method('createRequest')
+            ->with('GET', 'http://example.com/foo')->willReturn($request);
+        /** @var RequestFactory $requestFactory */
+
+        $httpClient = $this->getMockForAbstractClass(HttpClient::class);
+        $httpClient->expects(static::once())->method('sendRequest')->with($request)
             ->willReturn($response);
-        /** @var \Mekras\Interfaces\Http\Client\HttpClientInterface $http */
+        /** @var HttpClient $httpClient */
 
-        $service = new Service('http://example.com', $http);
-        $result = $service->retrieve('/foo');
-        $this->assertEquals(['foo' => 'bar'], $result);
-    }
-
-    /**
-     * @expectedException \Mekras\OData\Client\Exception\ClientErrorException
-     * @expectedExceptionCode 404
-     */
-    public function testRetrieveClientError()
-    {
-        $body = $this
-            ->getMockForAbstractClass('Mekras\Interfaces\Http\Message\StreamableInterface');
-        $body->expects($this->any())->method('getContents')->willReturn('{"error":{}}');
-
-        $response = $this
-            ->getMockForAbstractClass('Mekras\Interfaces\Http\Message\ResponseInterface');
-        $response->expects($this->any())->method('getStatusCode')->willReturn(404);
-        $response->expects($this->any())->method('getBody')->willReturn($body);
-        $response->expects($this->any())->method('getHeader')->willReturn('application/json');
-
-        $http = $this->getMockForAbstractClass('Mekras\Interfaces\Http\Client\HttpClientInterface');
-        $http->expects($this->once())->method('get')->with('http://example.com/foo')
-            ->willReturn($response);
-        /** @var \Mekras\Interfaces\Http\Client\HttpClientInterface $http */
-
-        $service = new Service('http://example.com', $http);
-        $service->retrieve('/foo');
+        $service = new Service('http://example.com', $httpClient, $requestFactory);
+        $result = $service->sendRequest('GET', '/foo');
+        static::assertEquals(['foo' => 'bar'], $result);
     }
 }
