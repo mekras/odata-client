@@ -12,7 +12,7 @@ First you need to create a Service — representation of the certain OData Servi
 use Mekras\OData\Client\Service;
 
 $service = new Service(
-    'http://23.21.103.255/SaasManagementServer/DataService.svc/',
+    'http://example.com/odata/',
     $httpClient, // Http\Client\HttpClient
     $messageFactory // Http\Message\MessageFactory
 );
