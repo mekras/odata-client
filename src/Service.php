@@ -123,36 +123,36 @@ class Service
 
         $rawData = $parser->parse((string) $response->getBody());
 
-        $statusCode = $response->getStatusCode();
-        if ($statusCode >= 400 && $statusCode < 600) {
-            throw $this->createErrorException($response, $rawData);
-        }
+        $this->checkForErrorResponse($response, $rawData);
 
         return $rawData;
     }
 
     /**
-     * Creates error exception from response and parsed raw data
+     * Throw exception if server reports error
      *
      * @param ResponseInterface $response
-     * @param array             $rawData
+     * @param array             $payload
      *
-     * @return ErrorException
+     * @throws ErrorException
      */
-    private function createErrorException(ResponseInterface $response, array $rawData)
+    private function checkForErrorResponse(ResponseInterface $response, array $payload)
     {
-        if ($response->getStatusCode() < 500) {
-            $exception = ClientErrorException::createFromArray(
-                $rawData,
-                $response->getStatusCode()
-            );
-        } else {
-            $exception = ServerErrorException::createFromArray(
-                $rawData,
-                $response->getStatusCode()
-            );
+        switch (floor($response->getStatusCode() / 100)) {
+            case 4:
+                throw new ClientErrorException(
+                    $payload,
+                    $response->getStatusCode()
+                );
+            case 5:
+                throw new ServerErrorException(
+                    $payload,
+                    $response->getStatusCode()
+                );
         }
 
-        return $exception;
+        if (array_key_exists('error', $payload)) {
+            throw new ErrorException($payload);
+        }
     }
 }

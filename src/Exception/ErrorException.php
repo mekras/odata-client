@@ -15,16 +15,14 @@ namespace Mekras\OData\Client\Exception;
 class ErrorException extends RuntimeException
 {
     /**
-     * Creates exception from server error data
+     * Create exception
      *
      * @param array $errorData raw error data
      * @param int   $code      HTTP code
      *
-     * @return ErrorException
-     *
      * @since 1.0
      */
-    public static function createFromArray(array $errorData, $code = 0)
+    public function __construct(array $errorData, $code = 0)
     {
         $message = '(unknown)';
         if (array_key_exists('message', $errorData)) {
@@ -40,6 +38,6 @@ class ErrorException extends RuntimeException
         }
         $message = rtrim($message, '.!') . '.';
 
-        return new static($message, $code);
+        parent::__construct($message, $code);
     }
 }
