@@ -74,6 +74,18 @@ class Service
     }
 
     /**
+     * Return Service root URI.
+     *
+     * @return string
+     *
+     * @link http://www.odata.org/documentation/odata-version-2-0/uri-conventions#ServiceRootUri
+     */
+    public function getServiceRootUri()
+    {
+        return $this->serviceRootUri;
+    }
+
+    /**
      * Perform actual HTTP request to service
      *
      * @param string $method  HTTP method.
