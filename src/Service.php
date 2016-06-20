@@ -16,10 +16,14 @@ use Mekras\OData\Client\Exception\LogicException;
 use Mekras\OData\Client\Exception\RuntimeException;
 use Mekras\OData\Client\Exception\ServerErrorException;
 use Mekras\OData\Client\Parser\ParserFactory;
+use Mekras\OData\Client\Response\Error;
+use Mekras\OData\Client\Response\Response;
 use Psr\Http\Message\ResponseInterface;
 
 /**
  * OData Service.
+ *
+ * A low-level interface to OData Service. Encapsulates all HTTP operations.
  */
 class Service
 {
@@ -92,7 +96,7 @@ class Service
      * @param string $uri     URI.
      * @param string $content Request body contents.
      *
-     * @return array Generalized data.
+     * @return Response
      *
      * @throws \Mekras\OData\Client\Exception\ErrorException
      * @throws \Mekras\OData\Client\Exception\InvalidDataException
@@ -116,55 +120,56 @@ class Service
             ->createRequest($method, $this->serviceRootUri . $uri, $headers, $content);
 
         try {
-            $response = $this->httpClient->sendRequest($request);
+            $httpResponse = $this->httpClient->sendRequest($request);
         } catch (HttpClientException $e) {
             throw new RuntimeException($e->getMessage(), 0, $e);
         } catch (\Exception $e) {
             throw new LogicException($e->getMessage(), 0, $e);
         }
 
-        $version = $response->getHeaderLine('DataServiceVersion');
+        $version = $httpResponse->getHeaderLine('DataServiceVersion');
         if ('' === $version) {
             throw new ServerErrorException('DataServiceVersion header not missed');
         }
 
-        $contentType = $response->getHeaderLine('Content-type');
+        $contentType = $httpResponse->getHeaderLine('Content-type');
         $contentType = explode(';', $contentType)[0];
 
         $parser = $this->parserFactory->getByContentType($contentType);
 
-        $rawData = $parser->parse((string) $response->getBody());
+        $response = $parser->parse((string) $httpResponse->getBody());
 
-        $this->checkForErrorResponse($response, $rawData);
+        $this->checkForErrorResponse($httpResponse, $response);
 
-        return $rawData;
+        return $response;
     }
 
     /**
      * Throw exception if server reports error
      *
-     * @param ResponseInterface $response
-     * @param array             $payload
+     * @param ResponseInterface $httpResponse
+     * @param Response          $response
      *
      * @throws ErrorException
      */
-    private function checkForErrorResponse(ResponseInterface $response, array $payload)
+    private function checkForErrorResponse(ResponseInterface $httpResponse, Response $response)
     {
-        switch (floor($response->getStatusCode() / 100)) {
+        if ($response instanceof Error) {
+            $message = $response->getMessage();
+            $code = $response->getCode();
+        } else {
+            $message = $httpResponse->getReasonPhrase();
+            $code = $httpResponse->getStatusCode();
+        }
+        switch (floor($httpResponse->getStatusCode() / 100)) {
             case 4:
-                throw new ClientErrorException(
-                    $payload,
-                    $response->getStatusCode()
-                );
+                throw new ClientErrorException($message, $code);
             case 5:
-                throw new ServerErrorException(
-                    $payload,
-                    $response->getStatusCode()
-                );
+                throw new ServerErrorException($message, $code);
         }
 
-        if (array_key_exists('error', $payload)) {
-            throw new ErrorException($payload);
+        if ($response instanceof Error) {
+            throw new ErrorException($message, $code);
         }
     }
 }

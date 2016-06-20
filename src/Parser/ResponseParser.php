@@ -8,6 +8,7 @@
 namespace Mekras\OData\Client\Parser;
 
 use Mekras\OData\Client\Exception\InvalidFormatException;
+use Mekras\OData\Client\Response\Response;
 
 /**
  * OData service response parser interface
@@ -19,13 +20,13 @@ interface ResponseParser
     /**
      * Parse response to array.
      *
-     * @param string $response The response body.
+     * @param string $contents The response body.
      *
-     * @return array Generalized data.
+     * @return Response
      *
      * @throws InvalidFormatException
      *
      * @since 1.0
      */
-    public function parse($response);
+    public function parse($contents);
 }

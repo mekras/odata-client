@@ -8,6 +8,7 @@
 namespace Mekras\OData\Client\Tests\Parser;
 
 use Mekras\OData\Client\Parser\JsonParser;
+use Mekras\OData\Client\Response\Response;
 
 /**
  * Tests for Mekras\OData\Client\Parser\JsonParser
@@ -22,8 +23,9 @@ class JsonParserTest extends \PHPUnit_Framework_TestCase
     public function testBasics()
     {
         $parser = new JsonParser();
-        $array = $parser->parse('{"foo":"bar"}');
-        $this->assertEquals(['foo' => 'bar'], $array);
+        $response = $parser->parse('{"d":{"foo":"bar"}}');
+        static::assertInstanceOf(Response::class, $response);
+        static::assertEquals(['foo' => 'bar'], $response->getData());
     }
 
     /**

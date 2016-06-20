@@ -27,7 +27,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     {
         $response = $this->getMockForAbstractClass(ResponseInterface::class);
         $response->expects(static::any())->method('getStatusCode')->willReturn(200);
-        $response->expects(static::any())->method('getBody')->willReturn('{"foo":"bar"}');
+        $response->expects(static::any())->method('getBody')->willReturn('{"d":{"foo":"bar"}}');
         $response->expects(static::any())->method('getHeaderLine')->willReturnCallback(
             function ($header) {
                 switch ($header) {
@@ -54,6 +54,6 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
         $service = new Service('http://example.com', $httpClient, $requestFactory);
         $result = $service->sendRequest('GET', '/foo');
-        static::assertEquals(['foo' => 'bar'], $result);
+        static::assertEquals(['foo' => 'bar'], $result->getData());
     }
 }
