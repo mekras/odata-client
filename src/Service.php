@@ -117,7 +117,7 @@ class Service
 
         $uri = '/' . ltrim($uri, '/');
         $request = $this->requestFactory
-            ->createRequest($method, $this->serviceRootUri . $uri, $headers, $content);
+            ->createRequest($method, $this->getServiceRootUri() . $uri, $headers, $content);
 
         try {
             $httpResponse = $this->httpClient->sendRequest($request);
