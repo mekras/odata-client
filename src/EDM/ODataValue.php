@@ -17,21 +17,21 @@ namespace Mekras\OData\Client\EDM;
 abstract class ODataValue
 {
     /**
-     * Raw data
+     * Value
      *
      * @var mixed
      */
-    protected $raw;
+    protected $value;
 
     /**
      * Create ODataValue.
      *
-     * @param mixed $raw Raw value.
+     * @param mixed $value Value.
      *
      * @since 1.0
      */
-    public function __construct($raw)
+    public function __construct($value = null)
     {
-        $this->raw = $raw;
+        $this->value = $value;
     }
 }

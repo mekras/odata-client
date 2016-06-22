@@ -23,18 +23,13 @@ class ServiceDocument extends ODataValue
     /**
      * ServiceDocument constructor.
      *
-     * @param array $raw Raw data.
-     *
-     * @throws InvalidDataException If $raw is not an array.
+     * @param array $value Raw data.
      *
      * @since 1.0
      */
-    public function __construct($raw)
+    public function __construct(array $value)
     {
-        if (!is_array($raw)) {
-            throw new InvalidDataException(__METHOD__ . ' expects $raw to be an array');
-        }
-        parent::__construct($raw);
+        parent::__construct($value);
     }
 
     /**
@@ -48,10 +43,10 @@ class ServiceDocument extends ODataValue
      */
     public function getEntitySets()
     {
-        if (!array_key_exists('EntitySets', $this->raw)) {
+        if (!array_key_exists('EntitySets', $this->value)) {
             throw new InvalidDataException('"EntitySets" key is missing');
         }
 
-        return $this->raw['EntitySets'];
+        return $this->value['EntitySets'];
     }
 }

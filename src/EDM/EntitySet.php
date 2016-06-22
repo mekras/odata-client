@@ -7,10 +7,8 @@
  */
 namespace Mekras\OData\Client\EDM;
 
-use Mekras\OData\Client\Exception\InvalidDataException;
-
 /**
- * Entry Set
+ * Entity Set
  *
  * @since 1.0
  *
@@ -19,42 +17,25 @@ use Mekras\OData\Client\Exception\InvalidDataException;
 class EntitySet extends ODataValue implements \Countable, \ArrayAccess
 {
     /**
-     * ServiceDocument constructor.
+     * Create new entity set.
      *
-     * @param ODataValue[] $items Collection items.
-     *
-     * @throws InvalidDataException If $items is not an array of ODataValue
-     *
-     * @since 1.0
+     * @param ODataValue[] $items
      */
-    public function __construct($items)
+    public function __construct(array $items = [])
     {
-        if (!is_array($items)) {
-            throw new InvalidDataException(__METHOD__ . ' expects $raw to be an array');
-        }
-        array_map(
-            function ($item) {
-                if (!$item instanceof ODataValue) {
-                    throw new InvalidDataException(
-                        '$items should contain only ODataValue instances'
-                    );
-                }
-            },
-            $items
-        );
         parent::__construct($items);
     }
 
     /**
-     * Return entry count.
+     * Add item to collection
      *
-     * @return int
+     * @param ODataValue $item
      *
      * @since 1.0
      */
-    public function count()
+    public function add(ODataValue $item)
     {
-        return count($this->raw);
+        $this->value[] = $item;
     }
 
     /**
@@ -66,7 +47,7 @@ class EntitySet extends ODataValue implements \Countable, \ArrayAccess
      */
     public function offsetExists($offset)
     {
-        return array_key_exists($offset, $this->raw);
+        return array_key_exists($offset, $this->value);
     }
 
     /**
@@ -74,24 +55,35 @@ class EntitySet extends ODataValue implements \Countable, \ArrayAccess
      *
      * @param mixed $offset The offset to retrieve.
      *
-     * @return mixed Can return all value types.
+     * @return ODataValue
      */
     public function offsetGet($offset)
     {
-        return $this->raw[$offset];
+        return $this->value[$offset];
     }
 
     /**
      * Offset to set
      *
-     * @param mixed $offset The offset to assign the value to.
-     * @param mixed $value  The value to set.
+     * @param mixed      $offset The offset to assign the value to.
+     * @param ODataValue $value  The value to set.
      *
      * @return void
+     *
+     * @throws \InvalidArgumentException
      */
     public function offsetSet($offset, $value)
     {
-        $this->raw[$offset] = $value;
+        if (!$value instanceof ODataValue) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Value for "%s" should be an instance of ODataValue, %s given',
+                    $offset,
+                    is_object($value) ? get_class($value) : gettype($value)
+                )
+            );
+        }
+        $this->value[$offset] = $value;
     }
 
     /**
@@ -101,6 +93,66 @@ class EntitySet extends ODataValue implements \Countable, \ArrayAccess
      */
     public function offsetUnset($offset)
     {
-        unset($this->raw[$offset]);
+        unset($this->value[$offset]);
+    }
+
+    /**
+     * Return the current element
+     *
+     * @return ODataValue
+     */
+    public function current()
+    {
+        return current($this->value);
+    }
+
+    /**
+     * Move forward to next element
+     *
+     * @return void
+     */
+    public function next()
+    {
+        next($this->value);
+    }
+
+    /**
+     * Return the key of the current element
+     *
+     * @return mixed scalar on success, or null on failure.
+     */
+    public function key()
+    {
+        return key($this->value);
+    }
+
+    /**
+     * Checks if current position is valid
+     *
+     * @return boolean Returns true on success or false on failure.
+     */
+    public function valid()
+    {
+        return null !== $this->key();
+    }
+
+    /**
+     * Rewind the Iterator to the first element
+     *
+     * @return void
+     */
+    public function rewind()
+    {
+        reset($this->value);
+    }
+
+    /**
+     * Count elements of an object
+     *
+     * @return int The custom count as an integer.
+     */
+    public function count()
+    {
+        return count($this->value);
     }
 }

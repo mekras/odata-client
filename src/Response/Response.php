@@ -7,6 +7,8 @@
  */
 namespace Mekras\OData\Client\Response;
 
+use Mekras\OData\Client\EDM\ODataValue;
+
 /**
  * OData Service response.
  *
@@ -24,17 +26,17 @@ class Response
     /**
      * Response data
      *
-     * @var array
+     * @var ODataValue
      */
     private $data;
 
     /**
      * Response constructor.
      *
-     * @param array $data Response payload.
-     * @param mixed $meta Meta data.
+     * @param ODataValue $data $data Response payload.
+     * @param mixed      $meta Meta data.
      */
-    public function __construct(array $data = [], $meta = null)
+    public function __construct(ODataValue $data, $meta = null)
     {
         $this->data = $data;
         $this->meta = $meta;
@@ -53,7 +55,7 @@ class Response
     /**
      * Return response payload.
      *
-     * @return array
+     * @return ODataValue
      */
     public function getData()
     {

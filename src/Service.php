@@ -115,7 +115,9 @@ class Service
             'Accept' => 'application/json'
         ];
 
+        $uri = str_replace($this->getServiceRootUri(), '', $uri);
         $uri = '/' . ltrim($uri, '/');
+
         $request = $this->requestFactory
             ->createRequest($method, $this->getServiceRootUri() . $uri, $headers, $content);
 

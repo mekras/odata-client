@@ -7,8 +7,6 @@
  */
 namespace Mekras\OData\Client\EDM;
 
-use Mekras\OData\Client\Exception\InvalidDataException;
-
 /**
  * OData ComplexType.
  *
@@ -16,23 +14,21 @@ use Mekras\OData\Client\Exception\InvalidDataException;
  *
  * @link  http://www.odata.org/documentation/odata-version-2-0/overview/#EntityDataModel
  */
-class ComplexType extends ODataValue implements \ArrayAccess
+class ComplexType extends ODataValue implements \ArrayAccess, \Iterator
 {
     /**
      * Create value of a ComplexType.
      *
-     * @param array $raw Raw data.
-     *
-     * @throws InvalidDataException If $raw is not an array.
+     * @param ODataValue[] $properties Property set.
      *
      * @since 1.0
      */
-    public function __construct($raw)
+    public function __construct(array $properties = [])
     {
-        if (!is_array($raw)) {
-            throw new InvalidDataException(__METHOD__ . ' expects $raw to be an array');
+        parent::__construct([]);
+        foreach ($properties as $key => $value) {
+            $this[$key] = $value;
         }
-        parent::__construct($raw);
     }
 
     /**
@@ -44,7 +40,7 @@ class ComplexType extends ODataValue implements \ArrayAccess
      */
     public function offsetExists($offset)
     {
-        return array_key_exists($offset, $this->raw);
+        return array_key_exists($offset, $this->value);
     }
 
     /**
@@ -52,24 +48,35 @@ class ComplexType extends ODataValue implements \ArrayAccess
      *
      * @param mixed $offset The offset to retrieve.
      *
-     * @return mixed Can return all value types.
+     * @return ODataValue
      */
     public function offsetGet($offset)
     {
-        return $this->raw[$offset];
+        return $this->value[$offset];
     }
 
     /**
      * Offset to set
      *
-     * @param mixed $offset The offset to assign the value to.
-     * @param mixed $value  The value to set.
+     * @param mixed      $offset The offset to assign the value to.
+     * @param ODataValue $value  The value to set.
      *
      * @return void
+     *
+     * @throws \InvalidArgumentException
      */
     public function offsetSet($offset, $value)
     {
-        $this->raw[$offset] = $value;
+        if (!$value instanceof ODataValue) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Value for "%s" should be an instance of ODataValue, %s given',
+                    $offset,
+                    is_object($value) ? get_class($value) : gettype($value)
+                )
+            );
+        }
+        $this->value[$offset] = $value;
     }
 
     /**
@@ -79,6 +86,56 @@ class ComplexType extends ODataValue implements \ArrayAccess
      */
     public function offsetUnset($offset)
     {
-        unset($this->raw[$offset]);
+        unset($this->value[$offset]);
+    }
+
+    /**
+     * Return the current element
+     *
+     * @return ODataValue
+     */
+    public function current()
+    {
+        return current($this->value);
+    }
+
+    /**
+     * Move forward to next element
+     *
+     * @return void
+     */
+    public function next()
+    {
+        next($this->value);
+    }
+
+    /**
+     * Return the key of the current element
+     *
+     * @return mixed scalar on success, or null on failure.
+     */
+    public function key()
+    {
+        return key($this->value);
+    }
+
+    /**
+     * Checks if current position is valid
+     *
+     * @return boolean Returns true on success or false on failure.
+     */
+    public function valid()
+    {
+        return null !== $this->key();
+    }
+
+    /**
+     * Rewind the Iterator to the first element
+     *
+     * @return void
+     */
+    public function rewind()
+    {
+        reset($this->value);
     }
 }

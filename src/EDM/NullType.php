@@ -8,26 +8,31 @@
 namespace Mekras\OData\Client\EDM;
 
 /**
- * OData Entry
+ * Null primitive
  *
  * @since 1.0
  *
  * @link  http://www.odata.org/documentation/odata-version-2-0/overview/#EntityDataModel
  */
-class EntityType extends ComplexType
+class NullType extends Primitive
 {
     /**
-     * Create value of a ComplexType.
+     * Create value.
+     */
+    public function __construct()
+    {
+        parent::__construct(null, 'Null');
+    }
+
+    /**
+     * Represent object as a string
      *
-     * @param ComplexType|null $properties Property set.
+     * @return string
      *
      * @since 1.0
      */
-    public function __construct(ComplexType $properties = null)
+    public function __toString()
     {
-        parent::__construct([]);
-        foreach ($properties as $key => $value) {
-            $this[$key] = $value;
-        }
+        return '';
     }
 }
