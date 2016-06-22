@@ -10,7 +10,6 @@ namespace Mekras\OData\Client\Tests\EDM;
 use Mekras\OData\Client\EDM\EntitySet;
 use Mekras\OData\Client\EDM\EntityType;
 use Mekras\OData\Client\EDM\IntegerType;
-use Mekras\OData\Client\EDM\StringType;
 
 /**
  * Tests for Mekras\OData\Client\EDM\EntitySet
@@ -19,19 +18,6 @@ use Mekras\OData\Client\EDM\StringType;
  */
 class EntitySetTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * All items should be an instances of ODataValue.
-     *
-     * @expectedException \TypeError
-     */
-    public function testConstructBadArguments()
-    {
-        if (version_compare(PHP_VERSION, '7.0', '<')) {
-            static::markTestSkipped('PHP 7.0 required');
-        }
-        new EntitySet([new StringType('foo')]);
-    }
-
     /**
      * Test \ArrayAccess implementation.
      */
