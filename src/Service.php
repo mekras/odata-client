@@ -12,7 +12,6 @@ use Http\Client\HttpClient;
 use Http\Message\RequestFactory;
 use Mekras\OData\Client\Exception\ClientErrorException;
 use Mekras\OData\Client\Exception\ErrorException;
-use Mekras\OData\Client\Exception\LogicException;
 use Mekras\OData\Client\Exception\RuntimeException;
 use Mekras\OData\Client\Exception\ServerErrorException;
 use Mekras\OData\Client\Parser\ParserFactory;
@@ -101,7 +100,6 @@ class Service
      * @throws \Mekras\OData\Client\Exception\ErrorException
      * @throws \Mekras\OData\Client\Exception\InvalidDataException
      * @throws \Mekras\OData\Client\Exception\InvalidFormatException
-     * @throws \Mekras\OData\Client\Exception\LogicException
      * @throws \Mekras\OData\Client\Exception\NotImplementedException
      * @throws \Mekras\OData\Client\Exception\RuntimeException
      * @throws \Mekras\OData\Client\Exception\ServerErrorException
@@ -123,10 +121,8 @@ class Service
 
         try {
             $httpResponse = $this->httpClient->sendRequest($request);
-        } catch (HttpClientException $e) {
-            throw new RuntimeException($e->getMessage(), 0, $e);
         } catch (\Exception $e) {
-            throw new LogicException($e->getMessage(), 0, $e);
+            throw new RuntimeException($e->getMessage(), 0, $e);
         }
 
         $version = $httpResponse->getHeaderLine('DataServiceVersion');
