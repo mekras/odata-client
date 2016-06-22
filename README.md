@@ -1,5 +1,7 @@
 # OData client
 
+[![Build Status](https://travis-ci.org/mekras/odata-client.svg?branch=master)](https://travis-ci.org/mekras/odata-client)
+
 OData client-side library.
 
 [OData Documentation](http://www.odata.org/documentation/).
