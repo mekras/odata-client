@@ -28,11 +28,24 @@ class ParserFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * UnsupportedException should be thrown for unsupported content type
+     * Get parser for "application/atom+xml"
      *
-     * @expectedException \Mekras\OData\Client\Exception\UnsupportedException
+     * @expectedException \Mekras\OData\Client\Exception\NotImplementedException
      */
-    public function testUnsupportedContentType()
+    public function testAtom()
+    {
+        $factory = new ParserFactory();
+        /*$parser = */$factory->getByContentType('application/atom+xml');
+        //static::assertInstanceOf('Mekras\OData\Client\Parser\AtomParser', $parser);
+        //static::assertSame($parser, $factory->getByContentType('application/atom+xml'));
+    }
+
+    /**
+     * ErrorException should be thrown for invalid content type
+     *
+     * @expectedException \Mekras\OData\Client\Exception\ErrorException
+     */
+    public function testInvalidContentType()
     {
         $factory = new ParserFactory();
         $factory->getByContentType('foo/bar');

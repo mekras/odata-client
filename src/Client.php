@@ -42,9 +42,9 @@ class Client
      * @throws \Mekras\OData\Client\Exception\InvalidDataException
      * @throws \Mekras\OData\Client\Exception\InvalidFormatException
      * @throws \Mekras\OData\Client\Exception\LogicException
+     * @throws \Mekras\OData\Client\Exception\NotImplementedException
      * @throws \Mekras\OData\Client\Exception\RuntimeException
      * @throws \Mekras\OData\Client\Exception\ServerErrorException
-     * @throws \Mekras\OData\Client\Exception\UnsupportedException
      *
      * @since 1.0
      */

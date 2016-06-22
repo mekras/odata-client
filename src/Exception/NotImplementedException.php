@@ -8,10 +8,10 @@
 namespace Mekras\OData\Client\Exception;
 
 /**
- * Unsupported feature.
+ * Unsupported protocol feature.
  *
  * @since 1.0
  */
-class UnsupportedException extends LogicException
+class NotImplementedException extends LogicException
 {
 }
