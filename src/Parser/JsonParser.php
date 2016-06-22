@@ -162,7 +162,8 @@ class JsonParser implements ResponseParser
     private function parseEntry(array $data)
     {
         return new EntityType(
-            $this->parseProperties(array_diff_key($data, ['__metadata' => null]))
+            $this->parseProperties(array_diff_key($data, ['__metadata' => null])),
+            $data['__metadata']
         );
     }
 

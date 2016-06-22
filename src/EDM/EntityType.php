@@ -17,19 +17,52 @@ namespace Mekras\OData\Client\EDM;
 class EntityType extends ComplexType
 {
     /**
+     * Meta data
+     *
+     * @var array
+     */
+    private $metadata = [];
+
+    /**
      * Create value of a ComplexType.
      *
      * @param \Traversable|array $properties Property set.
+     * @param array              $metadata   Meta data
      *
      * @since 1.0
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct($properties)
+    public function __construct($properties, array $metadata = [])
     {
         parent::__construct([]);
         foreach ($properties as $key => $value) {
             $this[$key] = $value;
         }
+        $this->metadata = $metadata;
+    }
+
+    /**
+     * Return meta data.
+     *
+     * @return array
+     *
+     * @since 1.0
+     */
+    public function getMetadata()
+    {
+        return $this->metadata;
+    }
+
+    /**
+     * Set meta data.
+     *
+     * @param array $metadata
+     *
+     * @since 1.0
+     */
+    public function setMetadata($metadata)
+    {
+        $this->metadata = $metadata;
     }
 }
