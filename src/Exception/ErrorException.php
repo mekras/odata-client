@@ -12,6 +12,6 @@ namespace Mekras\OData\Client\Exception;
  *
  * @since 1.0
  */
-class ErrorException extends RuntimeException
+abstract class ErrorException extends RuntimeException
 {
 }

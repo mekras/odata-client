@@ -11,7 +11,6 @@ use Http\Client\Exception as HttpClientException;
 use Http\Client\HttpClient;
 use Http\Message\RequestFactory;
 use Mekras\OData\Client\Exception\ClientErrorException;
-use Mekras\OData\Client\Exception\ErrorException;
 use Mekras\OData\Client\Exception\RuntimeException;
 use Mekras\OData\Client\Exception\ServerErrorException;
 use Mekras\OData\Client\Parser\ParserFactory;
@@ -97,7 +96,7 @@ class Service
      *
      * @return Response
      *
-     * @throws \Mekras\OData\Client\Exception\ErrorException
+     * @throws \Mekras\OData\Client\Exception\ClientErrorException
      * @throws \Mekras\OData\Client\Exception\InvalidDataException
      * @throws \Mekras\OData\Client\Exception\InvalidFormatException
      * @throws \Mekras\OData\Client\Exception\NotImplementedException
@@ -149,7 +148,8 @@ class Service
      * @param ResponseInterface $httpResponse
      * @param Response          $response
      *
-     * @throws ErrorException
+     * @throws ServerErrorException
+     * @throws ClientErrorException
      */
     private function checkForErrorResponse(ResponseInterface $httpResponse, Response $response)
     {
@@ -168,7 +168,7 @@ class Service
         }
 
         if ($response instanceof Error) {
-            throw new ErrorException($message, $code);
+            throw new ServerErrorException($message, $code);
         }
     }
 }
