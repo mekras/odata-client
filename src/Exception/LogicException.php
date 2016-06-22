@@ -9,9 +9,9 @@ namespace Mekras\OData\Client\Exception;
 
 /**
  * OData logic exception.
- * 
+ *
  * @since 1.0
  */
-class LogicException extends \RuntimeException implements ODataException
+class LogicException extends \LogicException implements ODataException
 {
 }
