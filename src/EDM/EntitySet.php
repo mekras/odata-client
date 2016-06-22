@@ -14,26 +14,33 @@ namespace Mekras\OData\Client\EDM;
  *
  * @link  http://www.odata.org/documentation/odata-version-2-0/overview/#EntityDataModel
  */
-class EntitySet extends ODataValue implements \Countable, \ArrayAccess
+class EntitySet extends ODataValue implements \Countable, \ArrayAccess, \Iterator
 {
     /**
      * Create new entity set.
      *
-     * @param ODataValue[] $items
+     * @param EntityType[] $items Entities.
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @since 1.0
      */
     public function __construct(array $items = [])
     {
-        parent::__construct($items);
+        parent::__construct([]);
+        foreach ($items as $value) {
+            $this->add($value);
+        }
     }
 
     /**
      * Add item to collection
      *
-     * @param ODataValue $item
+     * @param EntityType $item
      *
      * @since 1.0
      */
-    public function add(ODataValue $item)
+    public function add(EntityType $item)
     {
         $this->value[] = $item;
     }
@@ -55,7 +62,7 @@ class EntitySet extends ODataValue implements \Countable, \ArrayAccess
      *
      * @param mixed $offset The offset to retrieve.
      *
-     * @return ODataValue
+     * @return EntityType
      */
     public function offsetGet($offset)
     {
@@ -66,7 +73,7 @@ class EntitySet extends ODataValue implements \Countable, \ArrayAccess
      * Offset to set
      *
      * @param mixed      $offset The offset to assign the value to.
-     * @param ODataValue $value  The value to set.
+     * @param EntityType $value  The value to set.
      *
      * @return void
      *
@@ -74,10 +81,10 @@ class EntitySet extends ODataValue implements \Countable, \ArrayAccess
      */
     public function offsetSet($offset, $value)
     {
-        if (!$value instanceof ODataValue) {
+        if (!$value instanceof EntityType) {
             throw new \InvalidArgumentException(
                 sprintf(
-                    'Value for "%s" should be an instance of ODataValue, %s given',
+                    'Value for "%s" should be an instance of EntityType, %s given',
                     $offset,
                     is_object($value) ? get_class($value) : gettype($value)
                 )
@@ -99,7 +106,7 @@ class EntitySet extends ODataValue implements \Countable, \ArrayAccess
     /**
      * Return the current element
      *
-     * @return ODataValue
+     * @return EntityType
      */
     public function current()
     {

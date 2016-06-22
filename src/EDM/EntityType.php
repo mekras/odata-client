@@ -19,11 +19,13 @@ class EntityType extends ComplexType
     /**
      * Create value of a ComplexType.
      *
-     * @param ComplexType|null $properties Property set.
+     * @param \Traversable|array $properties Property set.
      *
      * @since 1.0
+     *
+     * @throws \InvalidArgumentException
      */
-    public function __construct(ComplexType $properties = null)
+    public function __construct($properties)
     {
         parent::__construct([]);
         foreach ($properties as $key => $value) {

@@ -21,6 +21,7 @@ use Mekras\OData\Client\EDM\ODataValue;
 use Mekras\OData\Client\EDM\Primitive;
 use Mekras\OData\Client\EDM\ServiceDocument;
 use Mekras\OData\Client\EDM\StringType;
+use Mekras\OData\Client\Exception\InvalidDataException;
 use Mekras\OData\Client\Exception\InvalidFormatException;
 use Mekras\OData\Client\Response\Error;
 use Mekras\OData\Client\Response\Response;
@@ -138,7 +139,11 @@ class JsonParser implements ResponseParser
     {
         $collection = new EntitySet();
         foreach ($data as $item) {
-            $collection->add($this->parseObject($item));
+            $object = $this->parseObject($item);
+            if (!$object instanceof EntityType) {
+                throw new InvalidDataException('Expecting EntityType, got ' . get_class($object));
+            }
+            $collection->add($object);
         }
 
         return $collection;
@@ -178,17 +183,13 @@ class JsonParser implements ResponseParser
      *
      * @param array $data
      *
-     * @return ODataValue
+     * @return ComplexType
      *
      * @throws \InvalidArgumentException
      * @throws \Mekras\OData\Client\Exception\InvalidDataException
      */
     private function parseProperties(array $data)
     {
-        if (count($data) === 0) {
-            return new NullType();
-        }
-
         $property = new ComplexType();
         foreach ($data as $key => $value) {
             if (is_array($value)) {

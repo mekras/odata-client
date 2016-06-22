@@ -1,0 +1,71 @@
+<?php
+/**
+ * OData client library
+ *
+ * @author  Михаил Красильников <m.krasilnikov@yandex.ru>
+ * @license MIT
+ */
+namespace Mekras\OData\Client\Tests\EDM;
+
+use Mekras\OData\Client\EDM\EntitySet;
+use Mekras\OData\Client\EDM\EntityType;
+use Mekras\OData\Client\EDM\IntegerType;
+use Mekras\OData\Client\EDM\StringType;
+
+/**
+ * Tests for Mekras\OData\Client\EDM\EntitySet
+ *
+ * @covers Mekras\OData\Client\EDM\EntitySet
+ */
+class EntitySetTest extends \PHPUnit_Framework_TestCase
+{
+    /**
+     * All items should be an instances of ODataValue.
+     *
+     * @expectedException \TypeError
+     */
+    public function testConstructBadArguments()
+    {
+        if (version_compare(PHP_VERSION, '7.0', '<')) {
+            static::markTestSkipped('PHP 7.0 required');
+        }
+        new EntitySet([new StringType('foo')]);
+    }
+
+    /**
+     * Test \ArrayAccess implementation.
+     */
+    public function testArrayAccess()
+    {
+        $value = new EntitySet(
+            [
+                new EntityType(['Id' => new IntegerType(1)]),
+                new EntityType(['Id' => new IntegerType(2)])
+            ]
+        );
+
+        static::assertArrayHasKey(0, $value);
+        static::assertArrayHasKey(1, $value);
+        static::assertArrayNotHasKey(2, $value);
+        unset($value[1]);
+        static::assertArrayNotHasKey(1, $value);
+        static::assertEquals('1', (string) $value[0]['Id']);
+    }
+
+    /**
+     * Test \Iterator implementation.
+     */
+    public function testIterator()
+    {
+        $value = new EntitySet(
+            [
+                new EntityType(['Id' => new IntegerType(1)]),
+                new EntityType(['Id' => new IntegerType(2)])
+            ]
+        );
+
+        foreach ($value as $k => $v) {
+            static::assertEquals($k + 1, (string) $v['Id']);
+        }
+    }
+}

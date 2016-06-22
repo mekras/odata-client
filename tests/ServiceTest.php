@@ -9,6 +9,7 @@ namespace Mekras\OData\Client\Tests;
 
 use Http\Client\HttpClient;
 use Http\Message\RequestFactory;
+use Mekras\OData\Client\EDM\ComplexType;
 use Mekras\OData\Client\Service;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -54,6 +55,6 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
         $service = new Service('http://example.com', $httpClient, $requestFactory);
         $result = $service->sendRequest('GET', '/foo');
-        static::assertEquals(['foo' => 'bar'], $result->getData());
+        static::assertInstanceOf(ComplexType::class, $result->getData());
     }
 }

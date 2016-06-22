@@ -21,6 +21,8 @@ class ComplexType extends ODataValue implements \ArrayAccess, \Iterator
      *
      * @param ODataValue[] $properties Property set.
      *
+     * @throws \InvalidArgumentException
+     *
      * @since 1.0
      */
     public function __construct(array $properties = [])
