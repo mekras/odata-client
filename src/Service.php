@@ -133,7 +133,8 @@ class Service
         }
 
         $contentType = $httpResponse->getHeaderLine('Content-type');
-        $contentType = explode(';', $contentType)[0];
+        $parts = explode(';', $contentType);
+        $contentType = reset($parts);
 
         $parser = $this->parserFactory->getByContentType($contentType);
 
