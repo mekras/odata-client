@@ -7,6 +7,8 @@
  */
 namespace Mekras\OData\Client\Response;
 
+use Mekras\OData\Client\EDM\NullType;
+
 /**
  * OData Service error response.
  *
@@ -36,7 +38,7 @@ class Error extends Response
      */
     public function __construct($message, $code = '')
     {
-        parent::__construct();
+        parent::__construct(new NullType());
         $this->message = $message;
         $this->code = $code;
     }
