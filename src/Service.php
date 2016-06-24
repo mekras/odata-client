@@ -25,6 +25,9 @@ use Psr\Http\Message\ResponseInterface;
  */
 class Service
 {
+    const FORMAT_JSON = 'application/json';
+    const FORMAT_ATOM = 'application/atom+xml,application/atomsvc+xml,application/xml';
+
     /**
      * Service root URI.
      *
@@ -52,6 +55,13 @@ class Service
      * @var ParserFactory
      */
     private $parserFactory;
+
+    /**
+     * Interchange format
+     *
+     * @var string
+     */
+    private $format = self::FORMAT_JSON;
 
     /**
      * Creates new OData service proxy.
@@ -108,8 +118,8 @@ class Service
         $headers = [
             'DataServiceVersion' => '1.0',
             'MaxDataServiceVersion' => '1.0',
-            'Content-type' => 'application/json',
-            'Accept' => 'application/json'
+            //'Content-type' => $this->format,
+            'Accept' => $this->format
         ];
 
         $uri = str_replace($this->getServiceRootUri(), '', $uri);
@@ -140,6 +150,21 @@ class Service
         $this->checkForErrorResponse($httpResponse, $response);
 
         return $response;
+    }
+
+    /**
+     * Set interchange format.
+     *
+     * @param string $format See FORMAT_xxx class constants.
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function setFormat($format)
+    {
+        if (!in_array($format, [self::FORMAT_ATOM, self::FORMAT_JSON], false)) {
+            throw new \InvalidArgumentException('Invalid format: ' . $format);
+        }
+        $this->format = $format;
     }
 
     /**

@@ -24,4 +24,17 @@ class DateTimeTypeTest extends \PHPUnit_Framework_TestCase
         static::assertEquals('Edm.DateTime', $value->getType());
         static::assertEquals('01.06.16 01:02:03', $value->getValue()->format('d.m.y H:i:s'));
     }
+
+    /**
+     * "/Date(1366004666567)/" should be converted to "2013-04-15 05:44:26.567"
+     */
+    public function testCreateFromTicks()
+    {
+        $value = DateTimeType::createFromString('/Date(1366004666567)/');
+        static::assertInstanceOf(DateTimeType::class, $value);
+        static::assertEquals(
+            '2013-04-15 05:44:26.567000',
+            $value->getValue()->format('Y-m-d H:i:s.u')
+        );
+    }
 }

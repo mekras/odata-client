@@ -22,6 +22,34 @@ class DateTimeType extends Primitive
     const PATTERN = '#^/Date\((\d+)([+-]\d+)?\)/$#';
 
     /**
+     * Create object from string
+     *
+     * @param string $value
+     *
+     * @return DateTimeType
+     *
+     * @since 1.0
+     */
+    public static function createFromString($value)
+    {
+        if (preg_match(self::PATTERN, $value, $matches)) {
+            $ticks = (int) $matches[1];
+            $seconds = floor($ticks / 1000);
+            $ms = $ticks - ($seconds * 1000);
+            if (count($matches) === 3) {
+                $seconds += ($matches[2] * 60);
+            }
+            $time = new \DateTime('@' . $seconds);
+            if ($ms > 0) {
+                $time = new \DateTime($time->format('Y-m-dTH:i:s.') . $ms);
+            }
+        } else {
+            $time = new \DateTime($value, new \DateTimeZone('+00:00'));
+        }
+        return new static($time);
+    }
+
+    /**
      * Create value.
      *
      * @param \DateTimeInterface $value DateTime value.

@@ -30,11 +30,13 @@ use Mekras\OData\Client\Response\Response;
  * JSON response parser.
  *
  * @since 1.0
+ *
+ * @link  http://www.odata.org/documentation/odata-version-2-0/json-format/
  */
 class JsonParser implements ResponseParser
 {
     /**
-     * Parse response to array.
+     * Parse JSON response.
      *
      * @param string $contents The response body.
      *
@@ -60,8 +62,6 @@ class JsonParser implements ResponseParser
                 $message = $data['error']['message'];
                 if (is_array($message) && array_key_exists('value', $message)) {
                     $message = $message['value'];
-                } else {
-                    $message = (string) $message;
                 }
             }
             $code = null;
@@ -206,6 +206,8 @@ class JsonParser implements ResponseParser
     /**
      * Parse primitive value.
      *
+     * NOTE. This method can not detect Edm.Binary.
+     *
      * @param mixed $value
      *
      * @return Primitive
@@ -227,28 +229,50 @@ class JsonParser implements ResponseParser
         }
 
         if (is_int($value)) {
+            $value = (int) $value;
+            if ($value >= -32768 && $value <= 32767) {
+                return new IntegerType($value, IntegerType::INT16);
+            }
             return new IntegerType($value, IntegerType::INT32);
         }
 
-        if (is_float($value)) {
-            return new FloatType($value);
-        }
-
         if (is_numeric($value)) {
-            return new IntegerType($value, IntegerType::INT64);
-        }
-
-        if (preg_match(DateTimeType::PATTERN, $value, $matches)) {
-            $ticks = (int) $matches[1];
-            if (count($matches) === 3) {
-                $ticks += ($matches[2] * 60);
+            if (filter_var($value, FILTER_VALIDATE_INT)) {
+                $value = (int) $value;
+                if ($value > -128 && $value < 0) {
+                    return new IntegerType($value, IntegerType::SBYTE);
+                }
+                if ($value < 256) {
+                    return new IntegerType($value, IntegerType::BYTE);
+                }
+                return new IntegerType($value, IntegerType::INT64);
+            } elseif (filter_var($value, FILTER_VALIDATE_FLOAT)) {
+                return new FloatType($value);
             }
-
-            return new DateTimeType(new \DateTime('@' . $ticks));
         }
 
-        if (preg_match(GuidType::PATTERN, $value, $matches)) {
+        if (preg_match(DateTimeType::PATTERN, $value)) {
+            return DateTimeType::createFromString($value);
+        }
+
+        if (preg_match(GuidType::PATTERN, $value)) {
             return new GuidType($value);
+        }
+
+        if (preg_match('/^(\d+\.\d+)m$/i', $value, $matches)) {
+            return new FloatType($matches[1], FloatType::DECIMAL);
+        }
+
+        if (preg_match('/^(\d+(\.\d+|E[+-]\d+))d$/', $value, $matches)) {
+            return new FloatType($matches[1], FloatType::DOUBLE);
+        }
+
+        if (preg_match('/^(\d+\.\d+)f$/', $value, $matches)) {
+            return new FloatType($matches[1], FloatType::SINGLE);
+        }
+
+        if (preg_match('/^(-?\d+)L$/', $value, $matches)) {
+            return new IntegerType($matches[1], IntegerType::INT64);
         }
 
         return new StringType($value);

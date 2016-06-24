@@ -20,6 +20,7 @@ class IntegerType extends Primitive
     const INT16 = 'Edm.Int16';
     const INT32 = 'Edm.Int32';
     const INT64 = 'Edm.Int64';
+    const SBYTE = 'Edm.SByte';
 
     /**
      * Create value.

@@ -1,0 +1,43 @@
+{
+    "d": [
+        {
+            "__metadata": {
+                "uri": "http://services.odata.org/OData/OData.svc/Categories(1)",
+                "type": "DataServiceProviderDemo.Category"
+            },
+            "ID": 1,
+            "Name": "Food",
+            "Products": {
+                "__deferred": {
+                    "uri": "http://services.odata.org/OData/OData.svc/Categories(1)/Products"
+                }
+            }
+        },
+        {
+            "__metadata": {
+                "uri": "http://services.odata.org/OData/OData.svc/Categories(2)",
+                "type": "DataServiceProviderDemo.Category"
+            },
+            "ID": 2,
+            "Name": "Food",
+            "Products": {
+                "__deferred": {
+                    "uri": "http://services.odata.org/OData/OData.svc/Categories(2)/Products"
+                }
+            }
+        },
+        {
+            "__metadata": {
+                "uri": "http://services.odata.org/OData/OData.svc/Categories(3)",
+                "type": "DataServiceProviderDemo.Category"
+            },
+            "ID": 3,
+            "Name": "Food",
+            "Products": {
+                "__deferred": {
+                    "uri": "http://services.odata.org/OData/OData.svc/Categories(3)/Products"
+                }
+            }
+        }
+    ]
+}
