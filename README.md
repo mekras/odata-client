@@ -1,6 +1,7 @@
 # OData client
 
 [![Build Status](https://travis-ci.org/mekras/odata-client.svg?branch=master)](https://travis-ci.org/mekras/odata-client)
+[![Coverage Status](https://coveralls.io/repos/github/mekras/odata-client/badge.svg?branch=master)](https://coveralls.io/github/mekras/odata-client?branch=master)
 
 OData client-side library.
 
