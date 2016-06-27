@@ -40,7 +40,6 @@ class ParserFactory
             switch ($contentType) {
                 case 'application/xml':
                 case 'application/atom+xml':
-                case 'application/atom xml': // TODO Убрать после https://github.com/php-http/message/pull/42
                 case 'application/atomsvc+xml':
                     $this->parsers[$contentType] = new AtomParser();
                     break;
