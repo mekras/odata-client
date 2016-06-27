@@ -136,7 +136,7 @@ class Service
 
         $version = $httpResponse->getHeaderLine('DataServiceVersion');
         if ('' === $version) {
-            throw new ServerErrorException('DataServiceVersion header not missed');
+            throw new ServerErrorException('DataServiceVersion header missed');
         }
 
         $contentType = $httpResponse->getHeaderLine('Content-type');
