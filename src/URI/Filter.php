@@ -97,27 +97,25 @@ class Filter
     /**
      * Logical and.
      *
-     * @param string $arg1
-     * @param string $arg2
+     * @param string ...$args
      *
      * @return string
      */
-    public static function lAnd($arg1, $arg2)
+    public static function lAnd(...$args)
     {
-        return $arg1 . ' and ' . $arg2;
+        return implode(' and ', $args);
     }
 
     /**
      * Logical or.
      *
-     * @param string $arg1
-     * @param string $arg2
+     * @param string ...$args
      *
      * @return string
      */
-    public static function lOr($arg1, $arg2)
+    public static function lOr(...$args)
     {
-        return $arg1 . ' or ' . $arg2;
+        return implode(' or ', $args);
     }
 
     /**

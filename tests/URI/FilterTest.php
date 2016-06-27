@@ -35,4 +35,22 @@ class FilterTest extends \PHPUnit_Framework_TestCase
 
         static::assertEquals("Foo ne 'Bar'", $filter);
     }
+
+    /**
+     *
+     */
+    public function testAnd()
+    {
+        $filter = F::lAnd('A', 'B', 'C');
+        static::assertEquals('A and B and C', $filter);
+    }
+
+    /**
+     *
+     */
+    public function testOr()
+    {
+        $filter = F::lOr('A', 'B', 'C');
+        static::assertEquals('A or B or C', $filter);
+    }
 }
