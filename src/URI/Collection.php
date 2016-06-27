@@ -27,7 +27,7 @@ class Collection extends UriComponent
      * Create Collection URI component.
      *
      * @param string $name Collection name.
-     *                     
+     *
      * @since 1.0
      */
     public function __construct($name)
@@ -50,13 +50,15 @@ class Collection extends UriComponent
     /**
      * Set KeyPredicate component.
      *
+     * @param string|null $key Single key value.
+     *
      * @return KeyPredicate
      *
      * @since 1.0
      */
-    public function keyPredicate()
+    public function item($key = null)
     {
-        $component = new KeyPredicate();
+        $component = new KeyPredicate($key);
         $this->addComponent($component);
 
         return $component;

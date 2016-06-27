@@ -29,7 +29,9 @@ $object = $service->sendRequest('GET', '/Categories(1)');
 
 ## URIs
 
-Special helper `URI` can be used to construct URIs:
+Special helper `URI` can be used to construct URIs.
+
+Get first 5 Category entries: 
 
 ```php
 use Mekras\OData\Client\URI\Uri;
@@ -37,12 +39,26 @@ use Mekras\OData\Client\URI\Uri;
 
 $uri = new Uri();
 $uri
-    ->collection('ClientSet');
+    ->collection('Categories');
 $uri
     ->options()
     ->top(5);
 
-$object = $service->sendRequest('GET', $uri);
+$object = $service->sendRequest('GET', $uri); // Instance of EntitySet 
+```
+
+Get Category with ID 123: 
+
+```php
+use Mekras\OData\Client\URI\Uri;
+// ...
+
+$uri = new Uri();
+$uri
+    ->collection('Categories')
+    ->item('123');
+
+$object = $service->sendRequest('GET', $uri); // Instance of EntityType
 ```
 
 ## Response

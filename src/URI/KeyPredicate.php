@@ -24,6 +24,16 @@ class KeyPredicate extends UriComponent
     private $keyValue = [];
 
     /**
+     * KeyPredicate constructor.
+     *
+     * @param string|null $keyValue Set single key value.
+     */
+    public function __construct($keyValue = null)
+    {
+        $this->keyValue = (string) $keyValue;
+    }
+
+    /**
      * Represent URI component as a string
      *
      * @return string
@@ -43,22 +53,6 @@ class KeyPredicate extends UriComponent
         }
 
         return '(' . $string . ')' . parent::__toString();
-    }
-
-    /**
-     * Set single key value.
-     *
-     * @param string $value
-     *
-     * @return $this
-     *
-     * @since 1.0
-     */
-    public function keyValue($value)
-    {
-        $this->keyValue = (string) $value;
-
-        return $this;
     }
 
     /**
