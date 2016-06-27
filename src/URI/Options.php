@@ -114,4 +114,22 @@ class Options
 
         return $this;
     }
+
+    /**
+     * Filter entries.
+     *
+     * @param string $filter Use Filter class to construct filter.
+     *
+     * @return $this
+     *
+     * @since 1.0
+     *
+     * @link  http://www.odata.org/documentation/odata-version-2-0/uri-conventions/#FilterSystemQueryOption
+     */
+    public function filter($filter)
+    {
+        $this->options['filter'] = (string) $filter;
+
+        return $this;
+    }
 }

@@ -31,10 +31,11 @@ $object = $service->sendRequest('GET', '/Categories(1)');
 
 Special helper `URI` can be used to construct URIs.
 
-Get first 5 Category entries: 
+Get 5 Category entries skipping first 10 entries, reverse sorted by Name: 
 
 ```php
 use Mekras\OData\Client\URI\Uri;
+use Mekras\OData\Client\URI\Options;
 // ...
 
 $uri = new Uri();
@@ -42,7 +43,9 @@ $uri
     ->collection('Categories');
 $uri
     ->options()
-    ->top(5);
+    ->top(5)
+    ->skip(10)
+    ->orderBy('Name', Options::DESC);
 
 $object = $service->sendRequest('GET', $uri); // Instance of EntitySet 
 ```

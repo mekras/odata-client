@@ -54,14 +54,29 @@ class OptionsTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
+    public function testFilter()
+    {
+        $options = new Options();
+        $options->filter("Name eq 'Foo'");
+
+        static::assertEquals('?$filter=Name eq \'Foo\'', (string) $options);
+    }
+
+    /**
+     *
+     */
     public function testComplex()
     {
         $options = new Options();
         $options
-            ->orderBy('Foo', Options::DESC)
+            ->filter("Name eq 'Foo'")
             ->top(5)
-            ->skip(10);
+            ->skip(10)
+            ->orderBy('Foo', Options::DESC);
 
-        static::assertEquals('?$orderby=Foo desc&$top=5&$skip=10', (string) $options);
+        static::assertEquals(
+            '?$filter=Name eq \'Foo\'&$top=5&$skip=10&$orderby=Foo desc',
+            (string) $options
+        );
     }
 }
