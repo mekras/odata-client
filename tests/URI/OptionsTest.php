@@ -19,17 +19,6 @@ class OptionsTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function testTop()
-    {
-        $options = new Options();
-        $options->top(5);
-
-        static::assertEquals('?$top=5', (string) $options);
-    }
-
-    /**
-     *
-     */
     public function testOrderBy()
     {
         $options = new Options();
@@ -43,13 +32,36 @@ class OptionsTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
+    public function testTop()
+    {
+        $options = new Options();
+        $options->top(5);
+
+        static::assertEquals('?$top=5', (string) $options);
+    }
+
+    /**
+     *
+     */
+    public function testSkip()
+    {
+        $options = new Options();
+        $options->skip(5);
+
+        static::assertEquals('?$skip=5', (string) $options);
+    }
+
+    /**
+     *
+     */
     public function testComplex()
     {
         $options = new Options();
         $options
             ->orderBy('Foo', Options::DESC)
-            ->top(5);
+            ->top(5)
+            ->skip(10);
 
-        static::assertEquals('?$orderby=Foo desc&$top=5', (string) $options);
+        static::assertEquals('?$orderby=Foo desc&$top=5&$skip=10', (string) $options);
     }
 }

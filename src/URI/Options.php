@@ -96,4 +96,22 @@ class Options
 
         return $this;
     }
+
+    /**
+     * Skip $count entries.
+     *
+     * @param int $count
+     *
+     * @return $this
+     *
+     * @since 1.0
+     *
+     * @link  http://www.odata.org/documentation/odata-version-2-0/uri-conventions/#SkipSystemQueryOption
+     */
+    public function skip($count)
+    {
+        $this->options['skip'] = (int) $count;
+
+        return $this;
+    }
 }
