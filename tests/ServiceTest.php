@@ -55,6 +55,6 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
         $service = new Service('http://example.com', $httpClient, $requestFactory);
         $result = $service->sendRequest('GET', '/foo');
-        static::assertInstanceOf(ComplexType::class, $result->getData());
+        static::assertInstanceOf(ComplexType::class, $result);
     }
 }

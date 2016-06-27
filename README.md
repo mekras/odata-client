@@ -24,7 +24,7 @@ $service = new Service(
 With this service you can perform requests:
 
 ```php
-$response = $service->sendRequest('GET', '/Categories(1)');
+$object = $service->sendRequest('GET', '/Categories(1)');
 ```
 
 ## URIs
@@ -42,5 +42,22 @@ $uri
     ->options()
     ->top(5);
 
-$response = $service->sendRequest('GET', $uri);
+$object = $service->sendRequest('GET', $uri);
 ```
+
+## Response
+
+Method `Service::sendRequest()` returns an instance one of the descendants of `ODataValue`:
+
+* `Primitive` — one of the [primitive data types](http://www.odata.org/documentation/odata-version-2-0/overview/#AbstractTypeSystem):
+    * `BooleanType`
+    * `DateTimeType`
+    * `FloatType`
+    * `GuidType`
+    * `IntegerType`
+    * `NullType`
+    * `StringType`
+* `ComplexType` — [Property of an entry](http://www.odata.org/documentation/odata-version-2-0/overview/#EntityDataModel)
+    * `EntityType`
+* `ServiceDocument`
+* `EntitySet`

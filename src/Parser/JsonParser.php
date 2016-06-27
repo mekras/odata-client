@@ -12,6 +12,7 @@ use Mekras\OData\Client\EDM\ComplexType;
 use Mekras\OData\Client\EDM\DateTimeType;
 use Mekras\OData\Client\EDM\EntitySet;
 use Mekras\OData\Client\EDM\EntityType;
+use Mekras\OData\Client\EDM\Error;
 use Mekras\OData\Client\EDM\FloatType;
 use Mekras\OData\Client\EDM\GuidType;
 use Mekras\OData\Client\EDM\IntegerType;
@@ -23,8 +24,6 @@ use Mekras\OData\Client\EDM\ServiceDocument;
 use Mekras\OData\Client\EDM\StringType;
 use Mekras\OData\Client\Exception\InvalidDataException;
 use Mekras\OData\Client\Exception\InvalidFormatException;
-use Mekras\OData\Client\Response\Error;
-use Mekras\OData\Client\Response\Response;
 
 /**
  * JSON response parser.
@@ -40,7 +39,7 @@ class JsonParser implements ResponseParser
      *
      * @param string $contents The response body.
      *
-     * @return Response
+     * @return ODataValue
      *
      * @throws \InvalidArgumentException
      * @throws \Mekras\OData\Client\Exception\InvalidDataException
@@ -77,9 +76,7 @@ class JsonParser implements ResponseParser
             throw new InvalidFormatException('Missing "d" key in response: ' . $contents);
         }
 
-        $object = $this->parseObject($data['d']);
-
-        return new Response($object);
+        return $this->parseObject($data['d']);
     }
 
     /**
@@ -233,6 +230,7 @@ class JsonParser implements ResponseParser
             if ($value >= -32768 && $value <= 32767) {
                 return new IntegerType($value, IntegerType::INT16);
             }
+
             return new IntegerType($value, IntegerType::INT32);
         }
 
@@ -245,6 +243,7 @@ class JsonParser implements ResponseParser
                 if ($value < 256) {
                     return new IntegerType($value, IntegerType::BYTE);
                 }
+
                 return new IntegerType($value, IntegerType::INT64);
             } elseif (filter_var($value, FILTER_VALIDATE_FLOAT)) {
                 return new FloatType($value);

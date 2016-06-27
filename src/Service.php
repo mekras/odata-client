@@ -10,12 +10,12 @@ namespace Mekras\OData\Client;
 use Http\Client\Exception as HttpClientException;
 use Http\Client\HttpClient;
 use Http\Message\RequestFactory;
+use Mekras\OData\Client\EDM\Error;
+use Mekras\OData\Client\EDM\ODataValue;
 use Mekras\OData\Client\Exception\ClientErrorException;
 use Mekras\OData\Client\Exception\RuntimeException;
 use Mekras\OData\Client\Exception\ServerErrorException;
 use Mekras\OData\Client\Parser\ParserFactory;
-use Mekras\OData\Client\Response\Error;
-use Mekras\OData\Client\Response\Response;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -104,7 +104,7 @@ class Service
      * @param string $uri     URI.
      * @param string $content Request body contents.
      *
-     * @return Response
+     * @return ODataValue
      *
      * @throws \Mekras\OData\Client\Exception\ClientErrorException
      * @throws \Mekras\OData\Client\Exception\InvalidDataException
@@ -129,27 +129,27 @@ class Service
             ->createRequest($method, $this->getServiceRootUri() . $uri, $headers, $content);
 
         try {
-            $httpResponse = $this->httpClient->sendRequest($request);
+            $response = $this->httpClient->sendRequest($request);
         } catch (\Exception $e) {
             throw new RuntimeException($e->getMessage(), 0, $e);
         }
 
-        $version = $httpResponse->getHeaderLine('DataServiceVersion');
+        $version = $response->getHeaderLine('DataServiceVersion');
         if ('' === $version) {
             throw new ServerErrorException('DataServiceVersion header missed');
         }
 
-        $contentType = $httpResponse->getHeaderLine('Content-type');
+        $contentType = $response->getHeaderLine('Content-type');
         $parts = explode(';', $contentType);
         $contentType = reset($parts);
 
         $parser = $this->parserFactory->getByContentType($contentType);
 
-        $response = $parser->parse((string) $httpResponse->getBody());
+        $object = $parser->parse((string) $response->getBody());
 
-        $this->checkForErrorResponse($httpResponse, $response);
+        $this->checkResponseForErrors($response, $object);
 
-        return $response;
+        return $object;
     }
 
     /**
@@ -170,29 +170,29 @@ class Service
     /**
      * Throw exception if server reports error
      *
-     * @param ResponseInterface $httpResponse
-     * @param Response          $response
+     * @param ResponseInterface $response
+     * @param ODataValue        $object
      *
      * @throws ServerErrorException
      * @throws ClientErrorException
      */
-    private function checkForErrorResponse(ResponseInterface $httpResponse, Response $response)
+    private function checkResponseForErrors(ResponseInterface $response, ODataValue $object)
     {
-        if ($response instanceof Error) {
-            $message = $response->getMessage();
-            $code = $response->getCode();
+        if ($object instanceof Error) {
+            $message = $object->getMessage();
+            $code = $object->getCode();
         } else {
-            $message = $httpResponse->getReasonPhrase();
-            $code = $httpResponse->getStatusCode();
+            $message = $response->getReasonPhrase();
+            $code = $response->getStatusCode();
         }
-        switch (floor($httpResponse->getStatusCode() / 100)) {
+        switch (floor($response->getStatusCode() / 100)) {
             case 4:
                 throw new ClientErrorException($message, $code);
             case 5:
                 throw new ServerErrorException($message, $code);
         }
 
-        if ($response instanceof Error) {
+        if ($object instanceof Error) {
             throw new ServerErrorException($message, $code);
         }
     }

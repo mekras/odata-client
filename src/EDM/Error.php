@@ -5,16 +5,14 @@
  * @author  Михаил Красильников <m.krasilnikov@yandex.ru>
  * @license MIT
  */
-namespace Mekras\OData\Client\Response;
-
-use Mekras\OData\Client\EDM\NullType;
+namespace Mekras\OData\Client\EDM;
 
 /**
  * OData Service error response.
  *
  * @since 1.0
  */
-class Error extends Response
+class Error extends ODataValue
 {
     /**
      * Error code
@@ -38,7 +36,7 @@ class Error extends Response
      */
     public function __construct($message, $code = '')
     {
-        parent::__construct(new NullType());
+        parent::__construct();
         $this->message = $message;
         $this->code = $code;
     }

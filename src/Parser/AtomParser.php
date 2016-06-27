@@ -12,18 +12,18 @@ use Mekras\OData\Client\EDM\ComplexType;
 use Mekras\OData\Client\EDM\DateTimeType;
 use Mekras\OData\Client\EDM\EntitySet;
 use Mekras\OData\Client\EDM\EntityType;
+use Mekras\OData\Client\EDM\Error;
 use Mekras\OData\Client\EDM\FloatType;
 use Mekras\OData\Client\EDM\GuidType;
 use Mekras\OData\Client\EDM\IntegerType;
 use Mekras\OData\Client\EDM\Link;
 use Mekras\OData\Client\EDM\NullType;
+use Mekras\OData\Client\EDM\ODataValue;
 use Mekras\OData\Client\EDM\Primitive;
 use Mekras\OData\Client\EDM\ServiceDocument;
 use Mekras\OData\Client\EDM\StringType;
 use Mekras\OData\Client\Exception\InvalidDataException;
 use Mekras\OData\Client\Exception\InvalidFormatException;
-use Mekras\OData\Client\Response\Error;
-use Mekras\OData\Client\Response\Response;
 
 /**
  * JSON response parser.
@@ -44,7 +44,7 @@ class AtomParser implements ResponseParser
      *
      * @param string $contents The response body.
      *
-     * @return Response
+     * @return ODataValue
      *
      * @throws \InvalidArgumentException
      * @throws \Mekras\OData\Client\Exception\InvalidDataException
@@ -88,7 +88,7 @@ class AtomParser implements ResponseParser
                 $object = $this->parseProperties($doc->childNodes);
         }
 
-        return new Response($object);
+        return $object;
     }
 
     /**
