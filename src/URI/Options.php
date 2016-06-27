@@ -16,6 +16,21 @@ namespace Mekras\OData\Client\URI;
  */
 class Options
 {
+    /**
+     * Ascending sorting
+     */
+    const ASC = 'asc';
+
+    /**
+     * Descending sorting
+     */
+    const DESC = 'desc';
+
+    /**
+     * Options
+     *
+     * @var array
+     */
     private $options = [];
 
     /**
@@ -31,11 +46,37 @@ class Options
         if (count($this->options)) {
             $query = [];
             foreach ($this->options as $key => $value) {
+                if (is_array($value)) {
+                    $value = implode(',', $value);
+                }
                 $query[] = '$' . $key . '=' . $value;
             }
             $query = '?' . implode('&', $query);
         }
+
         return $query;
+    }
+
+    /**
+     * Select only $count first entries.
+     *
+     * @param string $field     Field to sort by.
+     * @param string $direction Sort direction.
+     *
+     * @return $this
+     *
+     * @since 1.0
+     *
+     * @link  http://www.odata.org/documentation/odata-version-2-0/uri-conventions/#OrderBySystemQueryOption
+     */
+    public function orderBy($field, $direction = self::ASC)
+    {
+        if (!array_key_exists('orderby', $this->options)) {
+            $this->options['orderby'] = [];
+        }
+        $this->options['orderby'][] = $field . ' ' . $direction;
+
+        return $this;
     }
 
     /**
@@ -46,6 +87,8 @@ class Options
      * @return $this
      *
      * @since 1.0
+     *
+     * @link  http://www.odata.org/documentation/odata-version-2-0/uri-conventions/#TopSystemQueryOption
      */
     public function top($count)
     {
