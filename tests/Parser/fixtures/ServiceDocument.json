@@ -1,9 +1,0 @@
-{
-    "d": {
-        "EntitySets": [
-            "Products",
-            "Categories",
-            "Suppliers"
-        ]
-    }
-}

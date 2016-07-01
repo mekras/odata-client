@@ -10,12 +10,11 @@ namespace Mekras\OData\Client;
 use Http\Client\Exception as HttpClientException;
 use Http\Client\HttpClient;
 use Http\Message\RequestFactory;
-use Mekras\OData\Client\EDM\Error;
-use Mekras\OData\Client\EDM\ODataValue;
+use Mekras\Atom\Document\Document;
+use Mekras\OData\Client\Document\ErrorDocument;
 use Mekras\OData\Client\Exception\ClientErrorException;
 use Mekras\OData\Client\Exception\RuntimeException;
 use Mekras\OData\Client\Exception\ServerErrorException;
-use Mekras\OData\Client\Parser\ParserFactory;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -25,9 +24,6 @@ use Psr\Http\Message\ResponseInterface;
  */
 class Service
 {
-    const FORMAT_JSON = 'application/json';
-    const FORMAT_ATOM = 'application/atom+xml,application/atomsvc+xml,application/xml';
-
     /**
      * Service root URI.
      *
@@ -50,18 +46,11 @@ class Service
     private $requestFactory;
 
     /**
-     * The response parser factory.
+     * XML to OData Document converter.
      *
-     * @var ParserFactory
+     * @var OData
      */
-    private $parserFactory;
-
-    /**
-     * Interchange format
-     *
-     * @var string
-     */
-    private $format = self::FORMAT_JSON;
+    private $converter;
 
     /**
      * Creates new OData service proxy.
@@ -82,7 +71,7 @@ class Service
         $this->serviceRootUri = rtrim($serviceRootUri, '/');
         $this->httpClient = $httpClient;
         $this->requestFactory = $requestFactory;
-        $this->parserFactory = new ParserFactory();
+        $this->converter = new OData();
     }
 
     /**
@@ -100,33 +89,34 @@ class Service
     /**
      * Perform actual HTTP request to service
      *
-     * @param string $method  HTTP method.
-     * @param string $uri     URI.
-     * @param string $content Request body contents.
+     * @param string   $method   HTTP method.
+     * @param string   $uri      URI.
+     * @param Document $document Document to send to the server.
      *
-     * @return ODataValue
+     * @return Document
      *
+     * @throws \InvalidArgumentException
      * @throws \Mekras\OData\Client\Exception\ClientErrorException
-     * @throws \Mekras\OData\Client\Exception\InvalidDataException
-     * @throws \Mekras\OData\Client\Exception\InvalidFormatException
-     * @throws \Mekras\OData\Client\Exception\NotImplementedException
      * @throws \Mekras\OData\Client\Exception\RuntimeException
      * @throws \Mekras\OData\Client\Exception\ServerErrorException
      */
-    public function sendRequest($method, $uri, $content = null)
+    public function sendRequest($method, $uri, Document $document = null)
     {
         $headers = [
             'DataServiceVersion' => '1.0',
             'MaxDataServiceVersion' => '1.0',
-            //'Content-type' => $this->format,
-            'Accept' => $this->format
+            'Accept' => 'application/atom+xml,application/atomsvc+xml,application/xml'
         ];
+
+        if ($document) {
+            $headers['Content-type'] = 'application/atom+xml';
+        }
 
         $uri = str_replace($this->getServiceRootUri(), '', $uri);
         $uri = '/' . ltrim($uri, '/');
 
         $request = $this->requestFactory
-            ->createRequest($method, $this->getServiceRootUri() . $uri, $headers, $content);
+            ->createRequest($method, $this->getServiceRootUri() . $uri, $headers, $document);
 
         try {
             $response = $this->httpClient->sendRequest($request);
@@ -139,48 +129,26 @@ class Service
             throw new ServerErrorException('DataServiceVersion header missed');
         }
 
-        $contentType = $response->getHeaderLine('Content-type');
-        $parts = explode(';', $contentType);
-        $contentType = reset($parts);
+        $doc = $this->converter->parseXML((string) $response->getBody());
+        $this->checkResponseForErrors($response, $doc);
 
-        $parser = $this->parserFactory->getByContentType($contentType);
-
-        $object = $parser->parse((string) $response->getBody());
-
-        $this->checkResponseForErrors($response, $object);
-
-        return $object;
-    }
-
-    /**
-     * Set interchange format.
-     *
-     * @param string $format See FORMAT_xxx class constants.
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function setFormat($format)
-    {
-        if (!in_array($format, [self::FORMAT_ATOM, self::FORMAT_JSON], false)) {
-            throw new \InvalidArgumentException('Invalid format: ' . $format);
-        }
-        $this->format = $format;
+        return $doc;
     }
 
     /**
      * Throw exception if server reports error
      *
      * @param ResponseInterface $response
-     * @param ODataValue        $object
+     * @param Document          $document
      *
      * @throws ServerErrorException
      * @throws ClientErrorException
      */
-    private function checkResponseForErrors(ResponseInterface $response, ODataValue $object)
+    private function checkResponseForErrors(ResponseInterface $response, Document $document)
     {
-        if ($object instanceof Error) {
-            $message = $object->getMessage();
-            $code = $object->getCode();
+        if ($document instanceof ErrorDocument) {
+            $message = $document->getMessage();
+            $code = $document->getCode();
         } else {
             $message = $response->getReasonPhrase();
             $code = $response->getStatusCode();
@@ -192,7 +160,7 @@ class Service
                 throw new ServerErrorException($message, $code);
         }
 
-        if ($object instanceof Error) {
+        if ($document instanceof ErrorDocument) {
             throw new ServerErrorException($message, $code);
         }
     }
