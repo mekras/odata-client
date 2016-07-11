@@ -133,4 +133,26 @@ class PrimitiveTest extends TestCase
             ]
         ];
     }
+
+    /**
+     * Test setting type
+     */
+    public function testSetType()
+    {
+        $primitive = new Primitive($this->createFakeNode(), 'Foo');
+        $primitive->setType(Primitive::BINARY);
+        static::assertEquals(Primitive::BINARY, $primitive->getType());
+    }
+
+    /**
+     * Test creating new object.
+     */
+    public function testCreate()
+    {
+        $primitive = new Primitive($this->createFakeNode(), 'Foo', Primitive::DATETIME);
+        $primitive->setValue(new \DateTime('2016-01-02 03:04:05'));
+
+        static::assertEquals(Primitive::DATETIME, $primitive->getType());
+        static::assertEquals('2016-01-02 03:04:05', $primitive->getValue()->format('Y-m-d H:i:s'));
+    }
 }

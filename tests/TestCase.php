@@ -11,7 +11,9 @@ use Mekras\Atom\Atom;
 use Mekras\Atom\AtomExtension;
 use Mekras\Atom\Extensions;
 use Mekras\Atom\Node;
+use Mekras\AtomPub\AtomPub;
 use Mekras\AtomPub\Extension\AtomPubExtension;
+use Mekras\OData\Client\OData;
 use Mekras\OData\Client\ODataExtension;
 
 /**
@@ -67,7 +69,10 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $document->loadXML(
             '<?xml version="1.0" encoding="utf-8"?>' .
             '<' . $rootNodeName . ' xmlns="' . Atom::NS . '" ' .
-            'xmlns:xhtml="' . Atom::XHTML . '">' .
+            'xmlns:xhtml="' . Atom::XHTML . '" ' .
+            'xmlns:app="' . AtomPub::NS . '" ' .
+            'xmlns:m="' . OData::META . '" ' .
+            'xmlns:d="' . OData::DATA . '">' .
             $contents .
             '</' . $rootNodeName . '>'
         );

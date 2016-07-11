@@ -61,7 +61,7 @@ class Primitive extends Element
             $this->nodeName = (string) $element;
             parent::__construct($parent);
             if ($type) {
-                $this->getDomElement()->setAttribute('m:type', $type);
+                $this->getDomElement()->setAttributeNS(OData::META, 'type', $type);
             }
         }
     }
@@ -120,7 +120,7 @@ class Primitive extends Element
      */
     public function setType($type)
     {
-        $this->getDomElement()->setAttribute('m:type', $type);
+        $this->getDomElement()->setAttributeNS(OData::META, 'type', $type);
         $this->setCachedProperty('type', $type);
     }
 
@@ -136,7 +136,7 @@ class Primitive extends Element
         return $this->getCachedProperty(
             'value',
             function () {
-                if ($this->getDomElement()->getAttribute('m:null') === 'true') {
+                if ($this->getDomElement()->getAttributeNS(OData::META, 'null') === 'true') {
                     return null;
                 }
                 $value = trim($this->getDomElement()->textContent);
@@ -195,7 +195,7 @@ class Primitive extends Element
     {
         $element = $this->getDomElement();
         if (null === $value) {
-            $element->setAttribute('m:null', 'true');
+            $element->setAttributeNS(OData::META, 'null', 'true');
             $element->nodeValue = '';
         }
         switch ($this->getType()) {

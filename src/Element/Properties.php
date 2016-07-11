@@ -7,6 +7,7 @@
  */
 namespace Mekras\OData\Client\Element;
 
+use Mekras\Atom\Atom;
 use Mekras\Atom\Node;
 use Mekras\OData\Client\EDM\Primitive;
 use Mekras\OData\Client\Exception\LogicException;
@@ -41,7 +42,7 @@ class Properties extends Element implements \Iterator
         parent::__construct($parent, $element);
 
         if (null === $element) {
-            $parent->getDomElement()->setAttribute('type', 'application/xml');
+            $parent->getDomElement()->setAttributeNS(Atom::NS, 'type', 'application/xml');
         }
 
         /** @var \DOMNodeList $nodes */
