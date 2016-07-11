@@ -5,12 +5,13 @@
  * @author  Михаил Красильников <m.krasilnikov@yandex.ru>
  * @license MIT
  */
-namespace Mekras\OData\Client\Tests;
+namespace Mekras\OData\Client\Tests\Element;
 
 use Http\Client\HttpClient;
 use Http\Message\RequestFactory;
 use Mekras\AtomPub\Document\ServiceDocument;
 use Mekras\OData\Client\Service;
+use Mekras\OData\Client\Tests\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -19,7 +20,7 @@ use Psr\Http\Message\ResponseInterface;
  *
  * @covers Mekras\OData\Client\Service
  */
-class ServiceTest extends TestCase
+class EntryTest extends TestCase
 {
     /**
      * Service::sendRequest() should return ServiceDocument.

@@ -11,7 +11,9 @@ use Http\Client\Exception as HttpClientException;
 use Http\Client\HttpClient;
 use Http\Message\RequestFactory;
 use Mekras\Atom\Document\Document;
+use Mekras\Atom\Document\EntryDocument;
 use Mekras\OData\Client\Document\ErrorDocument;
+use Mekras\OData\Client\Element\Entry;
 use Mekras\OData\Client\Exception\ClientErrorException;
 use Mekras\OData\Client\Exception\RuntimeException;
 use Mekras\OData\Client\Exception\ServerErrorException;
@@ -21,6 +23,8 @@ use Psr\Http\Message\ResponseInterface;
  * OData Service.
  *
  * A low-level interface to OData Service. Encapsulates all HTTP operations.
+ *
+ * @api
  */
 class Service
 {
@@ -46,11 +50,11 @@ class Service
     private $requestFactory;
 
     /**
-     * XML to OData Document converter.
+     * OData Document factory.
      *
-     * @var OData
+     * @var DocumentFactory
      */
-    private $converter;
+    private $documentFactory;
 
     /**
      * Creates new OData service proxy.
@@ -71,19 +75,7 @@ class Service
         $this->serviceRootUri = rtrim($serviceRootUri, '/');
         $this->httpClient = $httpClient;
         $this->requestFactory = $requestFactory;
-        $this->converter = new OData();
-    }
-
-    /**
-     * Return Service root URI.
-     *
-     * @return string
-     *
-     * @link http://www.odata.org/documentation/odata-version-2-0/uri-conventions#ServiceRootUri
-     */
-    public function getServiceRootUri()
-    {
-        return $this->serviceRootUri;
+        $this->documentFactory = new DocumentFactory();
     }
 
     /**
@@ -115,8 +107,12 @@ class Service
         $uri = str_replace($this->getServiceRootUri(), '', $uri);
         $uri = '/' . ltrim($uri, '/');
 
-        $request = $this->requestFactory
-            ->createRequest($method, $this->getServiceRootUri() . $uri, $headers, $document);
+        $request = $this->requestFactory->createRequest(
+            $method,
+            $this->getServiceRootUri() . $uri,
+            $headers,
+            $document ? $document->getDomDocument()->saveXML() : null
+        );
 
         try {
             $response = $this->httpClient->sendRequest($request);
@@ -129,10 +125,48 @@ class Service
             throw new ServerErrorException('DataServiceVersion header missed');
         }
 
-        $doc = $this->converter->parseXML((string) $response->getBody());
+        $doc = $this->documentFactory->parseXML((string) $response->getBody());
         $this->checkResponseForErrors($response, $doc);
 
         return $doc;
+    }
+
+    /**
+     * Create new entity object.
+     *
+     * Created document should be POSTed via {@link sendRequest()}.
+     *
+     * @param string $type Entity type.
+     *
+     * @return EntryDocument
+     *
+     * @throws \InvalidArgumentException
+     * @throws \Mekras\Atom\Exception\MalformedNodeException
+     *
+     * @since 1.0
+     */
+    public function createEntityDocument($type)
+    {
+        /** @var EntryDocument $document */
+        $document = $this->documentFactory->createDocument('atom:entry');
+
+        /** @var Entry $entry */
+        $entry = $document->getEntry();
+        $entry->setEntityType($type);
+
+        return $document;
+    }
+
+    /**
+     * Return Service root URI.
+     *
+     * @return string
+     *
+     * @link http://www.odata.org/documentation/odata-version-2-0/uri-conventions#ServiceRootUri
+     */
+    public function getServiceRootUri()
+    {
+        return $this->serviceRootUri;
     }
 
     /**

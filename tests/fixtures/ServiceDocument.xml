@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<service xml:base="http://services.odata.org/OData/OData.svc/"
+    xmlns:atom="http://www.w3.org/2005/Atom"
+    xmlns:app="http://www.w3.org/2007/app"
+    xmlns="http://www.w3.org/2007/app">
+    <workspace>
+        <atom:title>Default</atom:title>
+        <collection href="ProductSet">
+            <atom:title>Products</atom:title>
+        </collection>
+        <collection href="CategorySet">
+            <atom:title>Categories</atom:title>
+        </collection>
+        <collection href="SupplierSet">
+            <atom:title>Suppliers</atom:title>
+        </collection>
+    </workspace>
+</service>

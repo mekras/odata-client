@@ -7,6 +7,10 @@
  */
 namespace Mekras\OData\Client\EDM;
 
+use Mekras\Atom\Node;
+use Mekras\OData\Client\Element\Element;
+use Mekras\OData\Client\OData;
+
 /**
  * Primitive
  *
@@ -14,25 +18,52 @@ namespace Mekras\OData\Client\EDM;
  *
  * @link  http://www.odata.org/documentation/odata-version-2-0/overview/#EntityDataModel
  */
-abstract class Primitive extends ODataValue
+class Primitive extends Element
 {
+    const BINARY = 'Edm.Binary';
+    const BOOLEAN = 'Edm.Boolean';
+    const BYTE = 'Edm.Byte';
+    const DATETIME = 'Edm.DateTime';
+    const DECIMAL = 'Edm.Decimal';
+    const DOUBLE = 'Edm.Double';
+    const GUID = 'Edm.Guid';
+    const INT16 = 'Edm.Int16';
+    const INT32 = 'Edm.Int32';
+    const INT64 = 'Edm.Int64';
+    const SBYTE = 'Edm.SByte';
+    const SINGLE = 'Edm.Single';
+    const STRING = 'Edm.String';
+
     /**
-     * Data type
+     * Node name.
      *
      * @var string
      */
-    private $type;
+    private $nodeName;
 
     /**
      * Create Primitive.
      *
-     * @param mixed  $value Value.
-     * @param string $type  Type (see class constants).
+     * @param Node               $parent  Parent node.
+     * @param \DOMElement|string $element DOM element or node name.
+     * @param string|null        $type    Primitive type if $element is a string.
+     *
+     * @since 1.0
+     *
+     * @throws \InvalidArgumentException
      */
-    public function __construct($value, $type)
+    public function __construct(Node $parent, $element, $type = null)
     {
-        parent::__construct($value);
-        $this->type = $type;
+        if ($element instanceof \DOMElement) {
+            $this->nodeName = $element->localName;
+            parent::__construct($parent, $element);
+        } else {
+            $this->nodeName = (string) $element;
+            parent::__construct($parent);
+            if ($type) {
+                $this->getDomElement()->setAttribute('m:type', $type);
+            }
+        }
     }
 
     /**
@@ -44,11 +75,23 @@ abstract class Primitive extends ODataValue
      */
     public function __toString()
     {
-        if (!is_scalar($this->value)) {
-            return '<Can not convert ' . gettype($this->value) . ' to string>';
+        if (!is_scalar($this->getValue())) {
+            return '<Can not convert ' . gettype($this->getValue()) . ' to string>';
         }
 
-        return (string) $this->value;
+        return (string) $this->getValue();
+    }
+
+    /**
+     * Return value name
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public function getName()
+    {
+        return $this->getDomElement()->localName;
     }
 
     /**
@@ -60,7 +103,25 @@ abstract class Primitive extends ODataValue
      */
     public function getType()
     {
-        return $this->type;
+        return $this->getCachedProperty(
+            'type',
+            function () {
+                return $this->getDomElement()->getAttributeNS(OData::META, 'type');
+            }
+        );
+    }
+
+    /**
+     * Set type.
+     *
+     * @param string $type
+     *
+     * @since 1.0
+     */
+    public function setType($type)
+    {
+        $this->getDomElement()->setAttribute('m:type', $type);
+        $this->setCachedProperty('type', $type);
     }
 
     /**
@@ -72,6 +133,112 @@ abstract class Primitive extends ODataValue
      */
     public function getValue()
     {
-        return $this->value;
+        return $this->getCachedProperty(
+            'value',
+            function () {
+                if ($this->getDomElement()->getAttribute('m:null') === 'true') {
+                    return null;
+                }
+                $value = trim($this->getDomElement()->textContent);
+                switch ($this->getType()) {
+                    case self::BINARY:
+                        $value = base64_decode($value);
+                        break;
+                    case self::BOOLEAN:
+                        $value = 'true' === $value;
+                        break;
+                    case self::BYTE:
+                    case self::INT16:
+                    case self::INT32:
+                    case self::INT64:
+                    case self::SBYTE:
+                        $value = (int) $value;
+                        break;
+                    case self::DATETIME:
+                        if (preg_match('#^/Date\((\d+)([+-]\d+)?\)/$#', $value, $matches)) {
+                            $ticks = (int) $matches[1];
+                            $seconds = floor($ticks / 1000);
+                            $ms = $ticks - ($seconds * 1000);
+                            if (count($matches) === 3) {
+                                $seconds += ($matches[2] * 60);
+                            }
+                            $value = new \DateTime('@' . $seconds);
+                            if ($ms > 0) {
+                                $value = new \DateTime($value->format('Y-m-dTH:i:s.') . $ms);
+                            }
+                        } else {
+                            $value = new \DateTime($value, new \DateTimeZone('+00:00'));
+                        }
+                        break;
+                    case self::DECIMAL:
+                    case self::DOUBLE:
+                    case self::SINGLE:
+                        $value = (float) $value;
+                        break;
+                }
+
+                return $value;
+            }
+        );
+    }
+
+    /**
+     * Set new value.
+     *
+     * @param mixed $value
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @since 1.0
+     */
+    public function setValue($value)
+    {
+        $element = $this->getDomElement();
+        if (null === $value) {
+            $element->setAttribute('m:null', 'true');
+            $element->nodeValue = '';
+        }
+        switch ($this->getType()) {
+            case self::BINARY:
+                $element->nodeValue = base64_encode($value);
+                break;
+            case self::BOOLEAN:
+                $element->nodeValue = $value ? 'true' : 'false';
+                break;
+            case self::DATETIME:
+                if (!$value instanceof \DateTimeInterface) {
+                    throw new \InvalidArgumentException('Value should implement DateTimeInterface');
+                }
+                $element->nodeValue = $value->format('Y-m-dTH:i:sZ');
+                break;
+            default:
+                $element->nodeValue = $value;
+        }
+
+        $this->setCachedProperty('value', $value);
+    }
+
+    /**
+     * Return node main namespace.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    public function ns()
+    {
+        return OData::DATA;
+    }
+
+    /**
+     * Return node name.
+     *
+     * @return string
+     *
+     * @since 1.0
+     */
+    protected function getNodeName()
+    {
+        return $this->nodeName;
     }
 }

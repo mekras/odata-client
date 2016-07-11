@@ -7,6 +7,8 @@
  */
 namespace Mekras\OData\Client\Document;
 
+use Mekras\Atom\Atom;
+use Mekras\Atom\Extensions;
 use Mekras\AtomPub\Document\Document as AtomPubDocument;
 use Mekras\OData\Client\OData;
 
@@ -17,6 +19,27 @@ use Mekras\OData\Client\OData;
  */
 abstract class Document extends AtomPubDocument
 {
+    /**
+     * Create document.
+     *
+     * @param Extensions        $extensions Extension registry.
+     * @param \DOMDocument|null $document   Source document.
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @since 1.0
+     */
+    public function __construct(Extensions $extensions, \DOMDocument $document = null)
+    {
+        parent::__construct($extensions, $document);
+        if (null === $document) {
+            $this->getDomDocument()->documentElement
+                ->setAttributeNS(Atom::XMLNS, 'xmlns:m', OData::META);
+            $this->getDomDocument()->documentElement
+                ->setAttributeNS(Atom::XMLNS, 'xmlns:d', OData::DATA);
+        }
+    }
+
     /**
      * Get the XPath query object
      *

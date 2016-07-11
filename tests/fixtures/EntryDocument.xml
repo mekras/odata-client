@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<entry xml:base="http://services.odata.org/OData/OData.svc/"
+    xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices"
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+    xmlns="http://www.w3.org/2005/Atom">
+    <id>http://services.odata.org/OData/OData.svc/Categories(0)</id>
+    <title type="text">Food</title>
+    <updated>2010-03-10T10:43:51Z</updated>
+    <author>
+        <name/>
+    </author>
+    <link rel="edit" title="Category" href="Categories(0)"/>
+    <link
+        rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/Products"
+        type="application/atom+xml;type=feed" title="Products"
+        href="Categories(0)/Products"/>
+    <category term="ODataDemo.Category"
+        scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme"/>
+    <content type="application/xml">
+        <m:properties>
+            <d:ID m:type="Edm.Int32">0</d:ID>
+            <d:Name>Food</d:Name>
+        </m:properties>
+    </content>
+</entry>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<m:properties xml:base="http://services.odata.org/OData/OData.svc/"
+    xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices"
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+    xmlns="http://www.w3.org/2005/Atom">
+    <d:Binary m:type="Edm.Binary">Rm9v</d:Binary>
+    <d:Boolean m:type="Edm.Boolean">true</d:Boolean>
+    <d:Byte m:type="Edm.Byte">255</d:Byte>
+    <d:DateTime1 m:type="Edm.DateTime">/Date(1366004666567)/</d:DateTime1>
+    <d:DateTime2 m:type="Edm.DateTime">2013-04-15T05:44:26.567</d:DateTime2>
+    <d:Decimal m:type="Edm.Decimal">123.456</d:Decimal>
+    <d:Double m:type="Edm.Double">123.456</d:Double>
+    <d:Guid m:type="Edm.Guid">1f13d502-079a-4d65-9ca4-1c5798504475</d:Guid>
+    <d:Int16 m:type="Edm.Int16">16</d:Int16>
+    <d:Int32 m:type="Edm.Int32">32</d:Int32>
+    <d:Int64 m:type="Edm.Int64">64</d:Int64>
+    <d:SByte m:type="Edm.SByte">-127</d:SByte>
+    <d:Single m:type="Edm.Single">123.456</d:Single>
+    <d:String m:type="Edm.String">Foo</d:String>
+    <d:Null m:type="Edm.String" m:null="true"/>
+</m:properties>

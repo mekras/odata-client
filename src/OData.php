@@ -7,22 +7,13 @@
  */
 namespace Mekras\OData\Client;
 
-use Mekras\AtomPub\AtomPub;
-
 /**
- * XML to OData Document converter.
+ * OData constants.
  */
-class OData extends AtomPub
+class OData
 {
     const DATA = 'http://schemas.microsoft.com/ado/2007/08/dataservices';
     const META = 'http://schemas.microsoft.com/ado/2007/08/dataservices/metadata';
-
-    /**
-     * OData constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->registerDocumentType(new ODataDocuments());
-    }
+    const SCHEME = 'http://schemas.microsoft.com/ado/2007/08/dataservices/scheme';
+    const RELATED = 'http://schemas.microsoft.com/ado/2007/08/dataservices/related';
 }
