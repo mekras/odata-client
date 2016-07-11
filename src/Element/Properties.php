@@ -120,7 +120,7 @@ class Properties extends Element implements \Iterator
     /**
      * Return the current element
      *
-     * @return mixed Can return any type.
+     * @return Primitive|false
      */
     public function current()
     {
@@ -140,11 +140,13 @@ class Properties extends Element implements \Iterator
     /**
      * Return the key of the current element
      *
-     * @return mixed scalar on success, or null on failure.
+     * @return string string on success, or null on failure.
      */
     public function key()
     {
-        return key($this->properties);
+        $property = $this->current();
+
+        return $property ? $property->getName() : null;
     }
 
     /**
@@ -154,15 +156,13 @@ class Properties extends Element implements \Iterator
      */
     public function valid()
     {
-        return $this->key() !== null;
+        return (bool) $this->current();
     }
 
     /**
      * Rewind the Iterator to the first element
      *
-     * @link  http://php.net/manual/en/iterator.rewind.php
-     * @return void Any returned value is ignored.
-     * @since 5.0.0
+     * @return void
      */
     public function rewind()
     {
