@@ -24,7 +24,7 @@ class Properties extends Element implements \Iterator
      *
      * @var Primitive[]
      */
-    private $properties;
+    private $properties = [];
 
     /**
      * Create node.
