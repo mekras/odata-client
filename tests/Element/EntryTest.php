@@ -16,9 +16,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Tests for Mekras\OData\Client\Service
- *
- * @covers Mekras\OData\Client\Service
+ * Tests for Mekras\OData\Client\Element\Entry
  */
 class EntryTest extends TestCase
 {
@@ -39,6 +37,7 @@ class EntryTest extends TestCase
                     case 'DataServiceVersion':
                         return '1.0';
                 }
+
                 return null;
             }
         );

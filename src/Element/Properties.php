@@ -17,7 +17,7 @@ use Mekras\OData\Client\OData;
  *
  * @since 1.0
  */
-class Properties extends Element
+class Properties extends Element implements \Iterator
 {
     /**
      * Property cache.
@@ -115,6 +115,58 @@ class Properties extends Element
     public function ns()
     {
         return OData::META;
+    }
+
+    /**
+     * Return the current element
+     *
+     * @return mixed Can return any type.
+     */
+    public function current()
+    {
+        return current($this->properties);
+    }
+
+    /**
+     * Move forward to next element
+     *
+     * @return void
+     */
+    public function next()
+    {
+        next($this->properties);
+    }
+
+    /**
+     * Return the key of the current element
+     *
+     * @return mixed scalar on success, or null on failure.
+     */
+    public function key()
+    {
+        return key($this->properties);
+    }
+
+    /**
+     * Checks if current position is valid
+     *
+     * @return boolean Returns true on success or false on failure.
+     */
+    public function valid()
+    {
+        return $this->key() !== null;
+    }
+
+    /**
+     * Rewind the Iterator to the first element
+     *
+     * @link  http://php.net/manual/en/iterator.rewind.php
+     * @return void Any returned value is ignored.
+     * @since 5.0.0
+     */
+    public function rewind()
+    {
+        reset($this->properties);
     }
 
     /**
