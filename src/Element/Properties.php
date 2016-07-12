@@ -7,8 +7,7 @@
  */
 namespace Mekras\OData\Client\Element;
 
-use Mekras\Atom\Atom;
-use Mekras\Atom\Node;
+use Mekras\Atom\Element\Content;
 use Mekras\OData\Client\EDM\Primitive;
 use Mekras\OData\Client\Exception\LogicException;
 use Mekras\OData\Client\OData;
@@ -30,19 +29,19 @@ class Properties extends Element implements \Iterator
     /**
      * Create node.
      *
-     * @param  Node            $parent  Parent node.
+     * @param  Content  $parent  Parent node.
      * @param \DOMElement|null $element DOM element.
      *
      * @since 1.0
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(Node $parent, $element = null)
+    public function __construct(Content $parent, $element = null)
     {
         parent::__construct($parent, $element);
 
         if (null === $element) {
-            $parent->getDomElement()->setAttributeNS(Atom::NS, 'type', 'application/xml');
+            $parent->setAttribute('type', 'application/xml');
         }
 
         /** @var \DOMNodeList $nodes */

@@ -24,16 +24,20 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Return new fake Node instance.
      *
+     * @param \DOMDocument|null $document
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject|Node
      */
-    protected function createFakeNode()
+    protected function createFakeNode(\DOMDocument $document = null)
     {
-        $doc = $this->createDocument();
+        if (null === $document) {
+            $document = $this->createDocument();
+        }
 
         $node = $this->getMockBuilder(Node::class)->disableOriginalConstructor()
             ->setMethods(['getDomElement', 'getExtensions'])->getMock();
         $node->expects(static::any())->method('getDomElement')
-            ->willReturn($doc->documentElement);
+            ->willReturn($document->documentElement);
         $node->expects(static::any())->method('getExtensions')
             ->willReturn($this->createExtensions());
 

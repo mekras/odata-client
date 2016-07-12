@@ -13,13 +13,6 @@ use Mekras\Atom\Node;
 use Mekras\OData\Client\EDM\Primitive;
 use Mekras\OData\Client\Exception\LogicException;
 use Mekras\OData\Client\OData;
-use Mekras\OData\Client\URI\Uri;
-
-/*$elements = $this->query('atom:link[starts-with(@type, "application/atom+xml;")]');
-foreach ($elements as $element) {
-    $link = new Link($this->getExtensions(), $element);
-    $result[$link->getTitle()] = $link;
-}*/
 
 /**
  * OData Entry.
@@ -153,7 +146,7 @@ class Entry extends BaseEntry implements \ArrayAccess
      * Add relation to some resource.
      *
      * @param Entry|string $resource Entry or resource IRI.
-     * @param null         $type     Resource type if $resource is not an Entry.
+     * @param string|null  $type     Can be omitted if $resource is an instance of Entry.
      *
      * @return Link
      *
@@ -168,8 +161,9 @@ class Entry extends BaseEntry implements \ArrayAccess
         $link = $this->getExtensions()->createElement($this, 'atom:link');
         $link->setType('application/atom+xml;type=entry');
         if ($resource instanceof Entry) {
-            $link->setRelation(OData::RELATED . '/' . $resource->getEntityType());
-            $link->setTitle($resource->getEntityType());
+            if (null === $type) {
+                $type = $resource->getEntityType();
+            }
             $link->setUri($resource->getLink('self'));
         } else {
             if (null === $type) {
@@ -177,10 +171,10 @@ class Entry extends BaseEntry implements \ArrayAccess
                     '$type should be specified if $resource not an Entry'
                 );
             }
-            $link->setRelation(OData::RELATED . '/' . $type);
-            $link->setTitle($type);
             $link->setUri((string) $resource);
         }
+        $link->setRelation(OData::RELATED . '/' . $type);
+        $link->setTitle($type);
 
         return $link;
     }

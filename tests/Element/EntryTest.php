@@ -76,9 +76,9 @@ class EntryTest extends TestCase
         static::assertEquals(
             '<entry>' .
             '<link type="application/atom+xml;type=entry" ' .
+            'href="FooSet(123)" ' .
             'rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/Foo" ' .
-            'title="Foo" ' .
-            'href="FooSet(123)"/>' .
+            'title="Foo"/>' .
             '</entry>',
             $this->getXML($entry)
         );
@@ -98,9 +98,9 @@ class EntryTest extends TestCase
         static::assertEquals(
             '<entry>' .
             '<link type="application/atom+xml;type=entry" ' .
+            'href="FooSet(123)" ' .
             'rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/Foo" ' .
-            'title="Foo" ' .
-            'href="FooSet(123)"/>' .
+            'title="Foo"/>' .
             '</entry>',
             $this->getXML($entry)
         );

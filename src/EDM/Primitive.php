@@ -61,7 +61,7 @@ class Primitive extends Element
             $this->nodeName = (string) $element;
             parent::__construct($parent);
             if ($type) {
-                $this->getDomElement()->setAttributeNS(OData::META, 'type', $type);
+                $this->setAttribute('m:type', $type);
             }
         }
     }
@@ -75,11 +75,16 @@ class Primitive extends Element
      */
     public function __toString()
     {
-        if (!is_scalar($this->getValue())) {
-            return '<Can not convert ' . gettype($this->getValue()) . ' to string>';
+        try {
+            $value = $this->getValue();
+        } catch (\InvalidArgumentException $e) {
+            return '(' . $e->getMessage() . ')';
+        }
+        if (!is_scalar($value)) {
+            return '(Can not convert ' . gettype($value) . ' to string)';
         }
 
-        return (string) $this->getValue();
+        return (string) $value;
     }
 
     /**
@@ -99,6 +104,8 @@ class Primitive extends Element
      *
      * @return string
      *
+     * @throws \InvalidArgumentException
+     *
      * @since 1.0
      */
     public function getType()
@@ -106,7 +113,7 @@ class Primitive extends Element
         return $this->getCachedProperty(
             'type',
             function () {
-                return $this->getDomElement()->getAttributeNS(OData::META, 'type');
+                return $this->getAttribute('m:type');
             }
         );
     }
@@ -116,11 +123,13 @@ class Primitive extends Element
      *
      * @param string $type
      *
+     * @throws \InvalidArgumentException
+     *
      * @since 1.0
      */
     public function setType($type)
     {
-        $this->getDomElement()->setAttributeNS(OData::META, 'type', $type);
+        $this->setAttribute('m:type', $type);
         $this->setCachedProperty('type', $type);
     }
 
@@ -129,6 +138,8 @@ class Primitive extends Element
      *
      * @return mixed
      *
+     * @throws \InvalidArgumentException
+     *
      * @since 1.0
      */
     public function getValue()
@@ -136,7 +147,7 @@ class Primitive extends Element
         return $this->getCachedProperty(
             'value',
             function () {
-                if ($this->getDomElement()->getAttributeNS(OData::META, 'null') === 'true') {
+                if ($this->getAttribute('m:null') === 'true') {
                     return null;
                 }
                 $value = trim($this->getDomElement()->textContent);
@@ -195,7 +206,7 @@ class Primitive extends Element
     {
         $element = $this->getDomElement();
         if (null === $value) {
-            $element->setAttributeNS(OData::META, 'null', 'true');
+            $this->setAttribute('m:null', 'true');
             $element->nodeValue = '';
         }
         switch ($this->getType()) {

@@ -9,6 +9,7 @@ namespace Mekras\OData\Client;
 
 use Mekras\Atom\Atom;
 use Mekras\Atom\Document\Document;
+use Mekras\Atom\Element\Content;
 use Mekras\Atom\Element\Element;
 use Mekras\Atom\Extension\DocumentExtension;
 use Mekras\Atom\Extension\ElementExtension;
@@ -87,6 +88,7 @@ class ODataExtension implements DocumentExtension, ElementExtension, NamespaceEx
         } elseif (OData::META === $element->namespaceURI) {
             switch ($element->localName) {
                 case 'properties':
+                    /** @var Content $parent */
                     return new Properties($parent, $element);
             }
         }
@@ -111,6 +113,7 @@ class ODataExtension implements DocumentExtension, ElementExtension, NamespaceEx
             case 'atom:entry':
                 return new Entry($parent);
             case 'm:properties':
+                /** @var Content $parent */
                 return new Properties($parent);
         }
 

@@ -7,6 +7,7 @@
  */
 namespace Mekras\OData\Client\Tests\Element;
 
+use Mekras\Atom\Element\Content;
 use Mekras\OData\Client\EDM\Primitive;
 use Mekras\OData\Client\Element\Properties;
 use Mekras\OData\Client\Tests\TestCase;
@@ -19,12 +20,24 @@ use Mekras\OData\Client\Tests\TestCase;
 class PropertiesTest extends TestCase
 {
     /**
+     * Test creating new "m:properties" element.
+     */
+    public function testCreate()
+    {
+        $content = new Content($this->createFakeNode());
+        new Properties($content);
+
+        static::assertEquals('application/xml', $content->getDomElement()->getAttribute('type'));
+    }
+
+    /**
      *
      */
     public function testIterator()
     {
         $document = $this->loadXML('Properties.xml');
-        $properties = new Properties($this->createFakeNode(), $document->firstChild);
+        $content = new Content($this->createFakeNode($document));
+        $properties = new Properties($content, $document->firstChild);
         $names = [];
         foreach ($properties as $name => $value) {
             $names[] = $name;
