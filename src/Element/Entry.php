@@ -9,7 +9,6 @@ namespace Mekras\OData\Client\Element;
 
 use Mekras\Atom\Element\Entry as BaseEntry;
 use Mekras\Atom\Element\Link;
-use Mekras\Atom\Node;
 use Mekras\OData\Client\EDM\Primitive;
 use Mekras\OData\Client\Exception\LogicException;
 use Mekras\OData\Client\OData;
@@ -23,35 +22,6 @@ use Mekras\OData\Client\OData;
  */
 class Entry extends BaseEntry implements \ArrayAccess
 {
-    /**
-     * Relations cache.
-     *
-     * @var Link[]
-     */
-    private $relations = [];
-
-    /**
-     * Create entry.
-     *
-     * @param  Node            $parent  Parent node.
-     * @param \DOMElement|null $element DOM element.
-     *
-     * @since 1.0
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function __construct(Node $parent, $element = null)
-    {
-        parent::__construct($parent, $element);
-        /** @var \DOMNodeList $nodes */
-        $nodes = $this->query('atom:link[starts-with(@rel, "' . OData::RELATED . '")]');
-        foreach ($nodes as $node) {
-            /** @var Link $link */
-            $link = $this->getExtensions()->parseElement($this, $node);
-            $this->relations[$link->getTitle()] = $link;
-        }
-    }
-
     /**
      * Return entity type.
      *
@@ -139,7 +109,21 @@ class Entry extends BaseEntry implements \ArrayAccess
      */
     public function getRelations()
     {
-        return $this->relations;
+        return $this->getCachedProperty(
+            'relations',
+            function () {
+                $relations = [];
+                /** @var \DOMNodeList $nodes */
+                $nodes = $this->query('atom:link[starts-with(@rel, "' . OData::RELATED . '")]');
+                foreach ($nodes as $node) {
+                    /** @var Link $link */
+                    $link = $this->getExtensions()->parseElement($this, $node);
+                    $relations[$link->getTitle()] = $link;
+                }
+
+                return $relations;
+            }
+        );
     }
 
     /**
@@ -158,7 +142,7 @@ class Entry extends BaseEntry implements \ArrayAccess
     public function addRelation($resource, $type = null)
     {
         /** @var Link $link */
-        $link = $this->getExtensions()->createElement($this, 'atom:link');
+        $link = $this->addChild('atom:link', 'relations');
         $link->setType('application/atom+xml;type=entry');
         if ($resource instanceof Entry) {
             if (null === $type) {
