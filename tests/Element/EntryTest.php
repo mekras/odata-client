@@ -10,8 +10,10 @@ namespace Mekras\OData\Client\Tests\Element;
 use Http\Client\HttpClient;
 use Http\Message\RequestFactory;
 use Mekras\AtomPub\Document\ServiceDocument;
+use Mekras\OData\Client\Element\Entry;
 use Mekras\OData\Client\Service;
 use Mekras\OData\Client\Tests\TestCase;
+use Mekras\OData\Client\URI\Uri;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -57,5 +59,50 @@ class EntryTest extends TestCase
         $service = new Service('http://example.com', $httpClient, $requestFactory);
         $document = $service->sendRequest('GET', '/foo');
         static::assertInstanceOf(ServiceDocument::class, $document);
+    }
+
+    /**
+     * Should be created valid "atom:link" element.
+     */
+    public function testAddRelationViaObject()
+    {
+        $resource = new Entry($this->createFakeNode());
+        $resource->setEntityType('Foo');
+        $resource->addLink('FooSet(123)', 'self');
+
+        $entry = new Entry($this->createFakeNode());
+        $entry->addRelation($resource);
+
+        static::assertEquals(
+            '<entry>' .
+            '<link type="application/atom+xml;type=entry" ' .
+            'rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/Foo" ' .
+            'title="Foo" ' .
+            'href="FooSet(123)"/>' .
+            '</entry>',
+            $this->getXML($entry)
+        );
+    }
+
+    /**
+     * Should be created valid "atom:link" element.
+     */
+    public function testAddRelationViaURI()
+    {
+        $uri = new Uri();
+        $uri->collection('FooSet')->item(123);
+
+        $entry = new Entry($this->createFakeNode());
+        $entry->addRelation($uri, 'Foo');
+
+        static::assertEquals(
+            '<entry>' .
+            '<link type="application/atom+xml;type=entry" ' .
+            'rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/Foo" ' .
+            'title="Foo" ' .
+            'href="FooSet(123)"/>' .
+            '</entry>',
+            $this->getXML($entry)
+        );
     }
 }

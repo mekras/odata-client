@@ -123,4 +123,16 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
         return $doc;
     }
+
+    /**
+     * Return node XML.
+     *
+     * @param Node $node
+     *
+     * @return string
+     */
+    protected function getXML(Node $node)
+    {
+        return $node->getDomElement()->ownerDocument->saveXML($node->getDomElement());
+    }
 }

@@ -13,6 +13,7 @@ use Mekras\Atom\Node;
 use Mekras\OData\Client\EDM\Primitive;
 use Mekras\OData\Client\Exception\LogicException;
 use Mekras\OData\Client\OData;
+use Mekras\OData\Client\URI\Uri;
 
 /*$elements = $this->query('atom:link[starts-with(@type, "application/atom+xml;")]');
 foreach ($elements as $element) {
@@ -146,6 +147,42 @@ class Entry extends BaseEntry implements \ArrayAccess
     public function getRelations()
     {
         return $this->relations;
+    }
+
+    /**
+     * Add relation to some resource.
+     *
+     * @param Entry|string $resource Entry or resource IRI.
+     * @param null         $type     Resource type if $resource is not an Entry.
+     *
+     * @return Link
+     *
+     * @throws \InvalidArgumentException
+     * @throws \Mekras\Atom\Exception\MalformedNodeException
+     *
+     * @since 1.0
+     */
+    public function addRelation($resource, $type = null)
+    {
+        /** @var Link $link */
+        $link = $this->getExtensions()->createElement($this, 'atom:link');
+        $link->setType('application/atom+xml;type=entry');
+        if ($resource instanceof Entry) {
+            $link->setRelation(OData::RELATED . '/' . $resource->getEntityType());
+            $link->setTitle($resource->getEntityType());
+            $link->setUri($resource->getLink('self'));
+        } else {
+            if (null === $type) {
+                throw new \InvalidArgumentException(
+                    '$type should be specified if $resource not an Entry'
+                );
+            }
+            $link->setRelation(OData::RELATED . '/' . $type);
+            $link->setTitle($type);
+            $link->setUri((string) $resource);
+        }
+
+        return $link;
     }
 
     /**
