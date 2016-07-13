@@ -220,7 +220,7 @@ class Primitive extends Element
                 if (!$value instanceof \DateTimeInterface) {
                     throw new \InvalidArgumentException('Value should implement DateTimeInterface');
                 }
-                $element->nodeValue = $value->format('Y-m-dTH:i:sZ');
+                $element->nodeValue = $value->format(\DateTime::RFC3339);
                 break;
             default:
                 $element->nodeValue = $value;

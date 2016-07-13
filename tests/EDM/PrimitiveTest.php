@@ -150,9 +150,13 @@ class PrimitiveTest extends TestCase
     public function testCreate()
     {
         $primitive = new Primitive($this->createFakeNode(), 'Foo', Primitive::DATETIME);
-        $primitive->setValue(new \DateTime('2016-01-02 03:04:05'));
+        $primitive->setValue(new \DateTime('2016-01-02 03:04:05+00:00'));
 
         static::assertEquals(Primitive::DATETIME, $primitive->getType());
         static::assertEquals('2016-01-02 03:04:05', $primitive->getValue()->format('Y-m-d H:i:s'));
+        static::assertEquals(
+            '<d:Foo m:type="Edm.DateTime">2016-01-02T03:04:05+00:00</d:Foo>',
+            $this->getXML($primitive)
+        );
     }
 }
