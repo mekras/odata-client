@@ -38,7 +38,10 @@ class EntryDocumentTest extends TestCase
         static::assertEquals('ODataDemo.Category', $entry->getEntityType());
         static::assertEquals('Categories(0)', (string) $entry->getLink('edit'));
         static::assertEquals('Food', (string) $entry->getTitle());
-        static::assertEquals('10.03.10 10:43:51', $entry->getUpdated()->format('d.m.y H:i:s'));
+        static::assertEquals(
+            '10.03.10 10:43:51',
+            $entry->getUpdated()->getDate()->format('d.m.y H:i:s')
+        );
         $content = $entry->getContent();
         static::assertEquals('application/xml', $content->getType());
 
