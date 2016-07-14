@@ -47,4 +47,28 @@ class EntryDocumentTest extends TestCase
 
         static::assertEquals(0, $entry['ID']->getValue());
     }
+
+    /**
+     * Test creating entries.
+     */
+    public function testCreate()
+    {
+        $service = $this->createService();
+        $document = $service->createEntityDocument('FooModel');
+
+        static::assertEquals(
+            '<?xml version="1.0" encoding="utf-8"?>' . "\n" .
+            '<entry xmlns="http://www.w3.org/2005/Atom" ' .
+            'xmlns:xhtml="http://www.w3.org/1999/xhtml" ' .
+            'xmlns:app="http://www.w3.org/2007/app" ' .
+            'xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" ' .
+            'xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices">' .
+            '<category term="FooModel" ' .
+            'scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme"/>' .
+            '<author><name></name></author>' .
+            '<content type="application/xml"><m:properties/></content>' .
+            '</entry>',
+            trim($document)
+        );
+    }
 }

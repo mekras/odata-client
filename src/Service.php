@@ -153,6 +153,9 @@ class Service
         /** @var Entry $entry */
         $entry = $document->getEntry();
         $entry->setEntityType($type);
+        $entry->addAuthor('');
+        $entry->addContent('');
+        $entry->getProperties(); // Create properties node.
 
         return $document;
     }

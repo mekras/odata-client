@@ -7,6 +7,8 @@
  */
 namespace Mekras\OData\Client\Tests;
 
+use Http\Client\HttpClient;
+use Http\Message\MessageFactory\GuzzleMessageFactory;
 use Mekras\Atom\Atom;
 use Mekras\Atom\AtomExtension;
 use Mekras\Atom\Extensions;
@@ -15,12 +17,27 @@ use Mekras\AtomPub\AtomPub;
 use Mekras\AtomPub\Extension\AtomPubExtension;
 use Mekras\OData\Client\OData;
 use Mekras\OData\Client\ODataExtension;
+use Mekras\OData\Client\Service;
 
 /**
  * Base test case.
  */
 abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * Create new Service.
+     *
+     * @return Service
+     */
+    protected function createService()
+    {
+        /** @var HttpClient $httpClient */
+        $httpClient = $this->getMockForAbstractClass(HttpClient::class);
+        $service = new Service('http://example.com', $httpClient, new GuzzleMessageFactory());
+
+        return $service;
+    }
+
     /**
      * Return new fake Node instance.
      *
@@ -89,7 +106,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      *
      * @param string $path Path to fixture relative to tests root folder.
      *
-     * @return \DOMDocument
+     * @return string
      */
     protected function locateFixture($path)
     {
