@@ -10,7 +10,7 @@
             "email": "m.krasilnikov@yandex.ru"
         }
     ],
-    "minimum-stability": "alpha",
+    "minimum-stability": "beta",
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
@@ -25,7 +25,7 @@
     "require": {
         "php": ">=5.6",
         "mekras/interfaces": "^3.0",
-        "mekras/atompub": "^1.0.0-alpha",
+        "mekras/atompub": "^1.0.0-beta",
         "php-http/client-implementation": "^1.0"
     },
     "require-dev": {
