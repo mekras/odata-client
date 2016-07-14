@@ -33,8 +33,6 @@ class ODataExtension implements DocumentExtension, ElementExtension, NamespaceEx
      *
      * @return Document|null
      *
-     * @throws \InvalidArgumentException
-     *
      * @since 1.0
      */
     public function parseDocument(Extensions $extensions, \DOMDocument $document)
@@ -42,6 +40,7 @@ class ODataExtension implements DocumentExtension, ElementExtension, NamespaceEx
         if (OData::META === $document->documentElement->namespaceURI) {
             switch ($document->documentElement->localName) {
                 case 'error':
+                    // Node name already checked
                     return new ErrorDocument($extensions, $document);
             }
         }
@@ -56,8 +55,6 @@ class ODataExtension implements DocumentExtension, ElementExtension, NamespaceEx
      * @param string     $name       Element name.
      *
      * @return Document|null
-     *
-     * @throws \InvalidArgumentException
      *
      * @since 1.0
      */
@@ -74,8 +71,6 @@ class ODataExtension implements DocumentExtension, ElementExtension, NamespaceEx
      *
      * @return Element|null
      *
-     * @throws \InvalidArgumentException
-     *
      * @since 1.0
      */
     public function parseElement(Node $parent, \DOMElement $element)
@@ -83,12 +78,14 @@ class ODataExtension implements DocumentExtension, ElementExtension, NamespaceEx
         if (Atom::NS === $element->namespaceURI) {
             switch ($element->localName) {
                 case 'entry':
+                    // Node name already checked
                     return new Entry($parent, $element);
             }
         } elseif (OData::META === $element->namespaceURI) {
             switch ($element->localName) {
                 case 'properties':
                     /** @var Content $parent */
+                    // Node name already checked
                     return new Properties($parent, $element);
             }
         }
@@ -103,7 +100,8 @@ class ODataExtension implements DocumentExtension, ElementExtension, NamespaceEx
      * @param string $name   Element name.
      *
      * @return Element|null
-     * @throws \InvalidArgumentException
+     *
+     * @throws \InvalidArgumentException If $element has invalid namespace.
      *
      * @since 1.0
      */

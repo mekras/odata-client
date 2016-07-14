@@ -27,7 +27,6 @@ class Entry extends BaseEntry implements \ArrayAccess
      *
      * @return string|null
      *
-     * @throws \InvalidArgumentException
      * @throws \Mekras\Atom\Exception\MalformedNodeException
      *
      * @since 1.0
@@ -54,8 +53,7 @@ class Entry extends BaseEntry implements \ArrayAccess
      *
      * @param string $type
      *
-     * @throws \InvalidArgumentException
-     * @throws \Mekras\Atom\Exception\MalformedNodeException
+     * @throws \Mekras\OData\Client\Exception\LogicException
      *
      * @since 1.0
      */
@@ -71,16 +69,17 @@ class Entry extends BaseEntry implements \ArrayAccess
             }
         }
 
-        $this->addCategory($type)->setScheme(OData::SCHEME);
+        try {
+            $this->addCategory($type)->setScheme(OData::SCHEME);
+        } catch (\InvalidArgumentException $e) {
+            throw new LogicException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     /**
      * Return entity properties.
      *
      * @return Properties
-     *
-     * @throws \InvalidArgumentException
-     * @throws \Mekras\Atom\Exception\MalformedNodeException
      *
      * @since 1.0
      */
@@ -89,6 +88,7 @@ class Entry extends BaseEntry implements \ArrayAccess
         return $this->getCachedProperty(
             'properties',
             function () {
+                // No REQUIRED — no exception
                 $node = $this->query('atom:content/m:properties', self::SINGLE);
                 if (null === $node) {
                     return $this->getExtensions()
@@ -169,9 +169,6 @@ class Entry extends BaseEntry implements \ArrayAccess
      * @param string $offset An offset to check for.
      *
      * @return boolean true on success or false on failure.
-     *
-     * @throws \InvalidArgumentException
-     * @throws \Mekras\Atom\Exception\MalformedNodeException
      */
     public function offsetExists($offset)
     {
@@ -184,9 +181,6 @@ class Entry extends BaseEntry implements \ArrayAccess
      * @param string $offset The offset to retrieve.
      *
      * @return Primitive
-     *
-     * @throws \InvalidArgumentException
-     * @throws \Mekras\Atom\Exception\MalformedNodeException
      */
     public function offsetGet($offset)
     {
@@ -200,7 +194,6 @@ class Entry extends BaseEntry implements \ArrayAccess
      * @param mixed  $value  The value to set.
      *
      * @throws \InvalidArgumentException
-     * @throws \Mekras\Atom\Exception\MalformedNodeException
      * @throws \Mekras\OData\Client\Exception\LogicException
      */
     public function offsetSet($offset, $value)
@@ -223,8 +216,6 @@ class Entry extends BaseEntry implements \ArrayAccess
      *
      * @param string $offset The offset to unset.
      *
-     * @throws \InvalidArgumentException
-     * @throws \Mekras\Atom\Exception\MalformedNodeException
      * @throws \Mekras\OData\Client\Exception\LogicException
      *
      * @SuppressWarnings(PMD.UnusedFormalParameter)

@@ -44,6 +44,7 @@ class KeyPredicate extends UriComponent
     {
         if (is_array($this->keyValue)) {
             $string = [];
+            /** @noinspection ForeachSourceInspection */
             foreach ($this->keyValue as $key => $value) {
                 $string[] = $key . '=' . $value;
             }

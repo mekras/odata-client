@@ -15,6 +15,7 @@ use Mekras\Atom\Document\EntryDocument;
 use Mekras\OData\Client\Document\ErrorDocument;
 use Mekras\OData\Client\Element\Entry;
 use Mekras\OData\Client\Exception\ClientErrorException;
+use Mekras\OData\Client\Exception\LogicException;
 use Mekras\OData\Client\Exception\RuntimeException;
 use Mekras\OData\Client\Exception\ServerErrorException;
 use Psr\Http\Message\ResponseInterface;
@@ -87,7 +88,8 @@ class Service
      *
      * @return Document
      *
-     * @throws \InvalidArgumentException
+     * @throws \InvalidArgumentException If given document is not supported.
+     * @throws \Mekras\Atom\Exception\RuntimeException In case of XML errors.
      * @throws \Mekras\OData\Client\Exception\ClientErrorException
      * @throws \Mekras\OData\Client\Exception\RuntimeException
      * @throws \Mekras\OData\Client\Exception\ServerErrorException
@@ -140,18 +142,27 @@ class Service
      *
      * @return EntryDocument
      *
-     * @throws \InvalidArgumentException
-     * @throws \Mekras\Atom\Exception\MalformedNodeException
+     * @throws \Mekras\OData\Client\Exception\LogicException
      *
      * @since 1.0
      */
     public function createEntityDocument($type)
     {
-        /** @var EntryDocument $document */
-        $document = $this->documentFactory->createDocument('atom:entry');
+        try {
+            $document = $this->documentFactory->createDocument('atom:entry');
+        } catch (\InvalidArgumentException $e) {
+            throw new LogicException('Can not create entry document', 0, $e);
+        }
 
-        /** @var Entry $entry */
+        if (!$document instanceof EntryDocument) {
+            throw new LogicException('Unexpected document type: ' . get_class($document));
+        }
+
         $entry = $document->getEntry();
+        if (!$entry instanceof Entry) {
+            throw new LogicException('Unexpected entry type: ' . get_class($entry));
+        }
+
         $entry->setEntityType($type);
         $entry->addAuthor('');
         $entry->addContent('');

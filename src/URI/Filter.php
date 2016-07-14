@@ -97,7 +97,7 @@ class Filter
     /**
      * Logical and.
      *
-     * @param string ...$args
+     * @param array|string ...$args
      *
      * @return string
      */
@@ -109,7 +109,7 @@ class Filter
     /**
      * Logical or.
      *
-     * @param string ...$args
+     * @param array|string ...$args
      *
      * @return string
      */

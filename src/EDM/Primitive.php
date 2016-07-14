@@ -48,9 +48,9 @@ class Primitive extends Element
      * @param \DOMElement|string $element DOM element or node name.
      * @param string|null        $type    Primitive type if $element is a string.
      *
-     * @since 1.0
+     * @throws \InvalidArgumentException If $element has invalid namespace.
      *
-     * @throws \InvalidArgumentException
+     * @since 1.0
      */
     public function __construct(Node $parent, $element, $type = null)
     {
@@ -61,6 +61,7 @@ class Primitive extends Element
             $this->nodeName = (string) $element;
             parent::__construct($parent);
             if ($type) {
+                // Prefix "m" registered — no exception
                 $this->setAttribute('m:type', $type);
             }
         }
@@ -104,18 +105,12 @@ class Primitive extends Element
      *
      * @return string
      *
-     * @throws \InvalidArgumentException
-     *
      * @since 1.0
      */
     public function getType()
     {
-        return $this->getCachedProperty(
-            'type',
-            function () {
-                return $this->getAttribute('m:type');
-            }
-        );
+        // Prefix "m" registered — no exception
+        return $this->getAttribute('m:type');
     }
 
     /**
@@ -123,22 +118,18 @@ class Primitive extends Element
      *
      * @param string $type
      *
-     * @throws \InvalidArgumentException
-     *
      * @since 1.0
      */
     public function setType($type)
     {
+        // Prefix "m" registered — no exception
         $this->setAttribute('m:type', $type);
-        $this->setCachedProperty('type', $type);
     }
 
     /**
      * Return value
      *
      * @return mixed
-     *
-     * @throws \InvalidArgumentException
      *
      * @since 1.0
      */
@@ -147,6 +138,7 @@ class Primitive extends Element
         return $this->getCachedProperty(
             'value',
             function () {
+                // Prefix "m" registered — no exception
                 if ($this->getAttribute('m:null') === 'true') {
                     return null;
                 }
@@ -198,7 +190,7 @@ class Primitive extends Element
      *
      * @param mixed $value
      *
-     * @throws \InvalidArgumentException
+     * @throws \InvalidArgumentException If the $value type does not match type set via setType()
      *
      * @since 1.0
      */
@@ -206,6 +198,7 @@ class Primitive extends Element
     {
         $element = $this->getDomElement();
         if (null === $value) {
+            // Prefix "m" registered — no exception
             $this->setAttribute('m:null', 'true');
             $element->nodeValue = '';
         }

@@ -34,17 +34,19 @@ class Properties extends Element implements \Iterator
      *
      * @since 1.0
      *
-     * @throws \InvalidArgumentException
+     * @throws \InvalidArgumentException If $element has invalid namespace.
      */
     public function __construct(Content $parent, $element = null)
     {
         parent::__construct($parent, $element);
 
         if (null === $element) {
+            // No prefix — no exception
             $parent->setAttribute('type', 'application/xml');
         }
 
         /** @var \DOMNodeList $nodes */
+        // No REQUIRED — no exception
         $nodes = $this->query('d:*');
         foreach ($nodes as $node) {
             $primitive = new Primitive($this, $node);
@@ -60,8 +62,8 @@ class Properties extends Element implements \Iterator
      * @param string $type  Primitive type (default is Primitive::STRING).
      *
      * @return Primitive
-     * @throws \InvalidArgumentException
      *
+     * @throws \InvalidArgumentException
      * @throws \Mekras\OData\Client\Exception\LogicException If property already exist.
      *
      * @since 1.0
