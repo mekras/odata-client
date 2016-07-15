@@ -11,11 +11,8 @@ use Http\Client\Exception as HttpClientException;
 use Http\Client\HttpClient;
 use Http\Message\RequestFactory;
 use Mekras\Atom\Document\Document;
-use Mekras\Atom\Document\EntryDocument;
 use Mekras\OData\Client\Document\ErrorDocument;
-use Mekras\OData\Client\Element\Entry;
 use Mekras\OData\Client\Exception\ClientErrorException;
-use Mekras\OData\Client\Exception\LogicException;
 use Mekras\OData\Client\Exception\RuntimeException;
 use Mekras\OData\Client\Exception\ServerErrorException;
 use Psr\Http\Message\ResponseInterface;
@@ -26,6 +23,8 @@ use Psr\Http\Message\ResponseInterface;
  * A low-level interface to OData Service. Encapsulates all HTTP operations.
  *
  * @api
+ *
+ * @since 1.0
  */
 class Service
 {
@@ -93,6 +92,8 @@ class Service
      * @throws \Mekras\OData\Client\Exception\ClientErrorException
      * @throws \Mekras\OData\Client\Exception\RuntimeException
      * @throws \Mekras\OData\Client\Exception\ServerErrorException
+     *
+     * @since 1.0
      */
     public function sendRequest($method, $uri, Document $document = null)
     {
@@ -134,53 +135,28 @@ class Service
     }
 
     /**
-     * Create new entity object.
-     *
-     * Created document should be POSTed via {@link sendRequest()}.
-     *
-     * @param string $type Entity type.
-     *
-     * @return EntryDocument
-     *
-     * @throws \Mekras\OData\Client\Exception\LogicException
-     *
-     * @since 1.0
-     */
-    public function createEntityDocument($type)
-    {
-        try {
-            $document = $this->documentFactory->createDocument('atom:entry');
-        } catch (\InvalidArgumentException $e) {
-            throw new LogicException('Can not create entry document', 0, $e);
-        }
-
-        if (!$document instanceof EntryDocument) {
-            throw new LogicException('Unexpected document type: ' . get_class($document));
-        }
-
-        $entry = $document->getEntry();
-        if (!$entry instanceof Entry) {
-            throw new LogicException('Unexpected entry type: ' . get_class($entry));
-        }
-
-        $entry->setEntityType($type);
-        $entry->addAuthor('');
-        $entry->addContent('');
-        $entry->getProperties(); // Create properties node.
-
-        return $document;
-    }
-
-    /**
      * Return Service root URI.
      *
      * @return string
      *
+     * @since 1.0
      * @link http://www.odata.org/documentation/odata-version-2-0/uri-conventions#ServiceRootUri
      */
     public function getServiceRootUri()
     {
         return $this->serviceRootUri;
+    }
+
+    /**
+     * Return document factory.
+     *
+     * @return DocumentFactory
+     *
+     * @since 1.0
+     */
+    public function getDocumentFactory()
+    {
+        return $this->documentFactory;
     }
 
     /**

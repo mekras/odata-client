@@ -53,8 +53,7 @@ class EntryDocumentTest extends TestCase
      */
     public function testCreate()
     {
-        $service = $this->createService();
-        $document = $service->createEntityDocument('FooModel');
+        $document = $this->createService()->getDocumentFactory()->createEntityDocument('FooModel');
 
         static::assertEquals(
             '<?xml version="1.0" encoding="utf-8"?>' . "\n" .
