@@ -16,6 +16,7 @@ use Mekras\Atom\Extension\ElementExtension;
 use Mekras\Atom\Extension\NamespaceExtension;
 use Mekras\Atom\Extensions;
 use Mekras\Atom\Node;
+use Mekras\OData\Client\Document\EntryDocument;
 use Mekras\OData\Client\Document\ErrorDocument;
 use Mekras\OData\Client\Element\Entry;
 use Mekras\OData\Client\Element\Properties;
@@ -26,7 +27,7 @@ use Mekras\OData\Client\Element\Properties;
 class ODataExtension implements DocumentExtension, ElementExtension, NamespaceExtension
 {
     /**
-     * Create Atom document from XML DOM document.
+     * Create OData document from XML DOM document.
      *
      * @param Extensions   $extensions Extension registry.
      * @param \DOMDocument $document   Source document.
@@ -37,19 +38,29 @@ class ODataExtension implements DocumentExtension, ElementExtension, NamespaceEx
      */
     public function parseDocument(Extensions $extensions, \DOMDocument $document)
     {
-        if (OData::META === $document->documentElement->namespaceURI) {
-            switch ($document->documentElement->localName) {
-                case 'error':
-                    // Node name already checked
-                    return new ErrorDocument($extensions, $document);
-            }
+        switch ($document->documentElement->namespaceURI) {
+            case Atom::NS:
+                switch ($document->documentElement->localName) {
+                    case 'entry':
+                        // Node name already checked
+                        return new EntryDocument($extensions, $document);
+                }
+                break;
+
+            case OData::META:
+                switch ($document->documentElement->localName) {
+                    case 'error':
+                        // Node name already checked
+                        return new ErrorDocument($extensions, $document);
+                }
+                break;
         }
 
         return null;
     }
 
     /**
-     * Create new Atom document.
+     * Create new OData document.
      *
      * @param Extensions $extensions Extension registry.
      * @param string     $name       Element name.
@@ -60,6 +71,12 @@ class ODataExtension implements DocumentExtension, ElementExtension, NamespaceEx
      */
     public function createDocument(Extensions $extensions, $name)
     {
+        switch ($name) {
+            case 'atom:entry':
+                // No document — no exception.
+                return new EntryDocument($extensions);
+        }
+
         return null;
     }
 

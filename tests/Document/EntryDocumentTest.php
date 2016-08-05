@@ -7,9 +7,10 @@
  */
 namespace Mekras\OData\Client\Tests\Document;
 
-use Mekras\Atom\Document\EntryDocument;
+use Mekras\OData\Client\Document\EntryDocument;
 use Mekras\OData\Client\DocumentFactory;
 use Mekras\OData\Client\Element\Entry;
+use Mekras\OData\Client\Element\Properties;
 use Mekras\OData\Client\Tests\TestCase;
 
 /**
@@ -62,12 +63,22 @@ class EntryDocumentTest extends TestCase
             'xmlns:app="http://www.w3.org/2007/app" ' .
             'xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" ' .
             'xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices">' .
-            '<category term="FooModel" ' .
-            'scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme"/>' .
             '<author><name></name></author>' .
             '<content type="application/xml"><m:properties/></content>' .
+            '<category term="FooModel" ' .
+            'scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme"/>' .
             '</entry>',
             trim($document)
         );
+    }
+
+    /**
+     * Empty entry should contains m:properties node.
+     */
+    public function testEmptyEntryHasProperties()
+    {
+        $document = new EntryDocument($this->createExtensions());
+        $entry = $document->getEntry();
+        static::assertInstanceOf(Properties::class, $entry->getProperties());
     }
 }

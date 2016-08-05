@@ -59,9 +59,6 @@ class DocumentFactory extends BaseDocumentFactory
         }
 
         $entry->setEntityType($type);
-        $entry->addAuthor('');
-        $entry->addContent('', 'text');
-        $entry->getProperties(); // Create properties node.
 
         return $document;
     }
