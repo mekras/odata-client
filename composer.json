@@ -10,8 +10,6 @@
             "email": "m.krasilnikov@yandex.ru"
         }
     ],
-    "minimum-stability": "beta",
-    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Mekras\\OData\\Client\\": "src/"
@@ -25,7 +23,7 @@
     "require": {
         "php": ">=5.6",
         "mekras/interfaces": "^3.0",
-        "mekras/atompub": "^1.0.0-beta",
+        "mekras/atompub": "^1.0",
         "php-http/client-implementation": "^1.0"
     },
     "require-dev": {
