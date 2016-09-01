@@ -10,11 +10,10 @@ use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
 use Mekras\OData\Client\Document\EntryDocument;
 use Mekras\OData\Client\OData;
+use Mekras\OData\Client\Service;
 use Mekras\OData\Client\URI\Uri;
 
 require __DIR__ . '/../../vendor/autoload.php';
-
-use Mekras\OData\Client\Service;
 
 $service = new Service(
     'http://services.odata.org/OData/OData.svc/',
@@ -34,10 +33,11 @@ if (!$document instanceof EntryDocument) {
 }
 
 $entry = $document->getEntry();
+printf("Entity type: %s\nProperties:\n", $entry->getEntityType());
 foreach ($entry->getProperties() as $property) {
     $value = $property->getValue();
     if ($value instanceof \DateTimeInterface) {
         $value = $value->format(DATE_RFC2822);
     }
-    printf("%s: %s\n", $property->getName(), $value);
+    printf("- %s: %s\n", $property->getName(), $value);
 }

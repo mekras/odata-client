@@ -13,6 +13,7 @@
 **Приложения**
 
 - [Класс Service](service.ru.md)
+- [Класс DocumentFactory](document_factory.ru.md)
 
 ---
 

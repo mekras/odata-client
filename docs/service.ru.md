@@ -2,7 +2,7 @@
 
 Класс `Mekras\OData\Client\Service` предоставляет интерфейс для взаимодействия со службой OData.
 
-## Service::__construct
+## __construct
 
 Создаёт экземпляр службы OData.
 
@@ -18,7 +18,7 @@ public function __construct(string $serviceRootUri, Http\Client\HttpClient $http
 - **$requestFactory** — Фабрика запросов HTTP (см. [Установка](install.ru.md)).
 
 
-## Service::sendRequest
+## sendRequest
 
 Выполняет запрос к службе OData.
 
@@ -62,7 +62,7 @@ public function sendRequest(string $method, string $uri,
 - [Запросы и ответы](requests.ru.md)
 
 
-## Service::getServiceRootUri
+## getServiceRootUri
 
 Возвращает корневой адрес службы OData.
 

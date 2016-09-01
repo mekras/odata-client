@@ -10,12 +10,11 @@ use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
 use Mekras\Atom\Document\FeedDocument;
 use Mekras\OData\Client\OData;
-use Mekras\OData\Client\URI\Uri;
+use Mekras\OData\Client\Service;
 use Mekras\OData\Client\URI\Filter as F;
+use Mekras\OData\Client\URI\Uri;
 
 require __DIR__ . '/../../vendor/autoload.php';
-
-use Mekras\OData\Client\Service;
 
 $service = new Service(
     'http://services.odata.org/OData/OData.svc/',
