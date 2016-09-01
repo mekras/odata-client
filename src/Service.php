@@ -99,7 +99,7 @@ class Service
     {
         $headers = [
             'DataServiceVersion' => '1.0',
-            'MaxDataServiceVersion' => '1.0',
+            'MaxDataServiceVersion' => '3.0',
             'Accept' => 'application/atom+xml,application/atomsvc+xml,application/xml'
         ];
 
