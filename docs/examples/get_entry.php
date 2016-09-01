@@ -34,4 +34,10 @@ if (!$document instanceof EntryDocument) {
 }
 
 $entry = $document->getEntry();
-printf("Id: %s\nRelease: %s\n", $entry['ID'], $entry['Price']);
+foreach ($entry->getProperties() as $property) {
+    $value = $property->getValue();
+    if ($value instanceof \DateTimeInterface) {
+        $value = $value->format(DATE_RFC2822);
+    }
+    printf("%s: %s\n", $property->getName(), $value);
+}
