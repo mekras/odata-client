@@ -35,7 +35,7 @@ $entry = $document->getEntry();
 printf("Id: %s\nRelease: %s\n", $entry['ID'], $entry['Price']);
 ```
 
-Полный пример: [example/get_entry.php](example/get_entry.php).
+Полный пример: [examples/get_entry.php](examples/get_entry.php).
 
 Разберём пример подробно.
 
