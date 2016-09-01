@@ -23,6 +23,8 @@ use Mekras\OData\Client\Element\Properties;
 
 /**
  * OData extensions.
+ *
+ * @since 0.3
  */
 class ODataExtension implements DocumentExtension, ElementExtension, NamespaceExtension
 {
@@ -34,7 +36,7 @@ class ODataExtension implements DocumentExtension, ElementExtension, NamespaceEx
      *
      * @return Document|null
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function parseDocument(Extensions $extensions, \DOMDocument $document)
     {
@@ -67,7 +69,7 @@ class ODataExtension implements DocumentExtension, ElementExtension, NamespaceEx
      *
      * @return Document|null
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function createDocument(Extensions $extensions, $name)
     {
@@ -88,7 +90,7 @@ class ODataExtension implements DocumentExtension, ElementExtension, NamespaceEx
      *
      * @return Element|null
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function parseElement(Node $parent, \DOMElement $element)
     {
@@ -120,7 +122,7 @@ class ODataExtension implements DocumentExtension, ElementExtension, NamespaceEx
      *
      * @throws \InvalidArgumentException If $element has invalid namespace.
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function createElement(Node $parent, $name)
     {
@@ -140,7 +142,7 @@ class ODataExtension implements DocumentExtension, ElementExtension, NamespaceEx
      *
      * @return string[] prefix => namespace.
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function getNamespaces()
     {

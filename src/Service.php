@@ -24,7 +24,7 @@ use Psr\Http\Message\ResponseInterface;
  *
  * @api
  *
- * @since 1.0
+ * @since 0.1
  */
 class Service
 {
@@ -63,9 +63,9 @@ class Service
      * @param HttpClient     $httpClient     HTTP client to use.
      * @param RequestFactory $requestFactory The HTTP request factory.
      *
-     * @since 1.0
+     * @since 0.1
      *
-     * @link  http://www.odata.org/documentation/odata-version-2-0/uri-conventions#ServiceRootUri
+     * @see   http://www.odata.org/documentation/odata-version-2-0/uri-conventions#ServiceRootUri
      */
     public function __construct(
         $serviceRootUri,
@@ -79,7 +79,7 @@ class Service
     }
 
     /**
-     * Perform actual HTTP request to service
+     * Perform actual HTTP request to service.
      *
      * @param string   $method   HTTP method.
      * @param string   $uri      URI.
@@ -89,11 +89,11 @@ class Service
      *
      * @throws \InvalidArgumentException If given document is not supported.
      * @throws \Mekras\Atom\Exception\RuntimeException In case of XML errors.
-     * @throws \Mekras\OData\Client\Exception\ClientErrorException
-     * @throws \Mekras\OData\Client\Exception\RuntimeException
-     * @throws \Mekras\OData\Client\Exception\ServerErrorException
+     * @throws \Mekras\OData\Client\Exception\ClientErrorException On client error.
+     * @throws \Mekras\OData\Client\Exception\RuntimeException On other errors.
+     * @throws \Mekras\OData\Client\Exception\ServerErrorException On server error.
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function sendRequest($method, $uri, Document $document = null)
     {
@@ -139,8 +139,8 @@ class Service
      *
      * @return string
      *
-     * @since 1.0
-     * @link http://www.odata.org/documentation/odata-version-2-0/uri-conventions#ServiceRootUri
+     * @since 0.3
+     * @see   http://www.odata.org/documentation/odata-version-2-0/uri-conventions#ServiceRootUri
      */
     public function getServiceRootUri()
     {
@@ -152,7 +152,7 @@ class Service
      *
      * @return DocumentFactory
      *
-     * @since 1.0
+     * @since 0.3.2
      */
     public function getDocumentFactory()
     {
@@ -160,13 +160,13 @@ class Service
     }
 
     /**
-     * Throw exception if server reports error
+     * Throw exception if server reports error.
      *
      * @param ResponseInterface $response
      * @param Document          $document
      *
-     * @throws ServerErrorException
-     * @throws ClientErrorException
+     * @throws \Mekras\OData\Client\Exception\ClientErrorException
+     * @throws \Mekras\OData\Client\Exception\ServerErrorException
      */
     private function checkResponseForErrors(ResponseInterface $response, Document $document)
     {

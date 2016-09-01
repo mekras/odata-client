@@ -16,7 +16,7 @@ use Mekras\OData\Client\OData;
  *
  * @since 1.0
  *
- * @link  http://www.odata.org/documentation/odata-version-2-0/overview/#EntityDataModel
+ * @see   http://www.odata.org/documentation/odata-version-2-0/overview/#EntityDataModel
  */
 class Primitive extends Element
 {

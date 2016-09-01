@@ -8,9 +8,9 @@
 namespace Mekras\OData\Client\Exception;
 
 /**
- * Server issued error
+ * Server issued error.
  *
- * @since 1.0
+ * @since 0.2
  */
 abstract class ErrorException extends RuntimeException
 {

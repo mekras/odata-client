@@ -12,7 +12,7 @@ use Mekras\OData\Client\OData;
 /**
  * OData Service error response.
  *
- * @since 1.0
+ * @since 0.3
  */
 class ErrorDocument extends Document
 {
@@ -21,7 +21,7 @@ class ErrorDocument extends Document
      *
      * @return int
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function getCode()
     {
@@ -35,7 +35,7 @@ class ErrorDocument extends Document
      *
      * @return string
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function getMessage()
     {
@@ -49,7 +49,7 @@ class ErrorDocument extends Document
      *
      * @return string
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function ns()
     {
@@ -61,7 +61,7 @@ class ErrorDocument extends Document
      *
      * @return string
      *
-     * @since 1.0
+     * @since 0.3
      */
     protected function getRootNodeName()
     {

@@ -15,14 +15,14 @@ use Mekras\OData\Client\Exception\LogicException;
 /**
  * OData document factory.
  *
- * @since 1.0
+ * @since 0.3
  */
 class DocumentFactory extends BaseDocumentFactory
 {
     /**
      * Create new factory.
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function __construct()
     {
@@ -39,7 +39,7 @@ class DocumentFactory extends BaseDocumentFactory
      *
      * @throws \Mekras\OData\Client\Exception\LogicException
      *
-     * @since 1.0
+     * @since 0.3.2
      */
     public function createEntityDocument($type)
     {

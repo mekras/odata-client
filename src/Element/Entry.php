@@ -16,9 +16,9 @@ use Mekras\OData\Client\OData;
 /**
  * OData Entry.
  *
- * @since 1.0
+ * @since 0.3
  *
- * @link  http://www.odata.org/documentation/odata-version-2-0/overview/#EntityDataModel
+ * @see   http://www.odata.org/documentation/odata-version-2-0/overview/#EntityDataModel
  */
 class Entry extends BaseEntry implements \ArrayAccess
 {
@@ -29,7 +29,7 @@ class Entry extends BaseEntry implements \ArrayAccess
      *
      * @throws \Mekras\Atom\Exception\MalformedNodeException
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function getEntityType()
     {
@@ -55,7 +55,7 @@ class Entry extends BaseEntry implements \ArrayAccess
      *
      * @throws \Mekras\OData\Client\Exception\LogicException
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function setEntityType($type)
     {
@@ -81,7 +81,7 @@ class Entry extends BaseEntry implements \ArrayAccess
      *
      * @return Properties
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function getProperties()
     {
@@ -105,7 +105,7 @@ class Entry extends BaseEntry implements \ArrayAccess
      *
      * @return Link[]
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function getRelations()
     {
@@ -137,7 +137,7 @@ class Entry extends BaseEntry implements \ArrayAccess
      * @throws \InvalidArgumentException
      * @throws \Mekras\Atom\Exception\MalformedNodeException
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function addRelation($resource, $type = null)
     {

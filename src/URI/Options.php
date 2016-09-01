@@ -10,9 +10,9 @@ namespace Mekras\OData\Client\URI;
 /**
  * Query String Options.
  *
- * @since 1.0
+ * @since 0.3
  *
- * @link  http://www.odata.org/documentation/odata-version-2-0/uri-conventions/#QueryStringOptions
+ * @see   http://www.odata.org/documentation/odata-version-2-0/uri-conventions/#QueryStringOptions
  */
 class Options
 {
@@ -38,7 +38,7 @@ class Options
      *
      * @return string
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function __toString()
     {
@@ -65,9 +65,9 @@ class Options
      *
      * @return $this
      *
-     * @since 1.0
+     * @since 0.3
      *
-     * @link  http://www.odata.org/documentation/odata-version-2-0/uri-conventions/#OrderBySystemQueryOption
+     * @see   http://www.odata.org/documentation/odata-version-2-0/uri-conventions/#OrderBySystemQueryOption
      */
     public function orderBy($field, $direction = self::ASC)
     {
@@ -86,9 +86,9 @@ class Options
      *
      * @return $this
      *
-     * @since 1.0
+     * @since 0.3
      *
-     * @link  http://www.odata.org/documentation/odata-version-2-0/uri-conventions/#TopSystemQueryOption
+     * @see   http://www.odata.org/documentation/odata-version-2-0/uri-conventions/#TopSystemQueryOption
      */
     public function top($count)
     {
@@ -104,9 +104,9 @@ class Options
      *
      * @return $this
      *
-     * @since 1.0
+     * @since 0.3
      *
-     * @link  http://www.odata.org/documentation/odata-version-2-0/uri-conventions/#SkipSystemQueryOption
+     * @see   http://www.odata.org/documentation/odata-version-2-0/uri-conventions/#SkipSystemQueryOption
      */
     public function skip($count)
     {
@@ -122,9 +122,9 @@ class Options
      *
      * @return $this
      *
-     * @since 1.0
+     * @since 0.3
      *
-     * @link  http://www.odata.org/documentation/odata-version-2-0/uri-conventions/#FilterSystemQueryOption
+     * @see   http://www.odata.org/documentation/odata-version-2-0/uri-conventions/#FilterSystemQueryOption
      */
     public function filter($filter)
     {

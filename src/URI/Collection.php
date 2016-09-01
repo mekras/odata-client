@@ -10,9 +10,9 @@ namespace Mekras\OData\Client\URI;
 /**
  * Collection URI component.
  *
- * @since 1.0
+ * @since 0.3
  *
- * @link  http://www.odata.org/documentation/odata-version-2-0/uri-conventions/
+ * @see   http://www.odata.org/documentation/odata-version-2-0/uri-conventions/
  */
 class Collection extends UriComponent
 {
@@ -28,7 +28,7 @@ class Collection extends UriComponent
      *
      * @param string $name Collection name.
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function __construct($name)
     {
@@ -40,7 +40,7 @@ class Collection extends UriComponent
      *
      * @return string
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function __toString()
     {
@@ -54,7 +54,7 @@ class Collection extends UriComponent
      *
      * @return KeyPredicate
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function item($key = null)
     {
@@ -71,7 +71,7 @@ class Collection extends UriComponent
      *
      * @return void
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function count()
     {

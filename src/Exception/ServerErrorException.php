@@ -10,7 +10,7 @@ namespace Mekras\OData\Client\Exception;
 /**
  * Server error.
  *
- * @since 1.0
+ * @since 0.2
  */
 class ServerErrorException extends ErrorException
 {

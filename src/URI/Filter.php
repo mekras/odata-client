@@ -10,9 +10,9 @@ namespace Mekras\OData\Client\URI;
 /**
  * Filter System Query Option.
  *
- * @since 1.0
+ * @since 0.3
  *
- * @link  http://www.odata.org/documentation/odata-version-2-0/uri-conventions/#FilterSystemQueryOption
+ * @see   http://www.odata.org/documentation/odata-version-2-0/uri-conventions/#FilterSystemQueryOption
  */
 class Filter
 {

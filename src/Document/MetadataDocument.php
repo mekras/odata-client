@@ -10,9 +10,9 @@ namespace Mekras\OData\Client\Document;
 /**
  * OData Metadata document.
  *
- * @since 1.0
+ * @since 0.3
  *
- * @link  http://www.odata.org/documentation/odata-version-2-0/overview/#ServiceMetadataDocument
+ * @see   http://www.odata.org/documentation/odata-version-2-0/overview/#ServiceMetadataDocument
  */
 class MetadataDocument extends Document
 {
@@ -21,7 +21,7 @@ class MetadataDocument extends Document
      *
      * @return string
      *
-     * @since 1.0
+     * @since 0.3.2
      */
     public function ns()
     {
@@ -33,7 +33,7 @@ class MetadataDocument extends Document
      *
      * @return string
      *
-     * @since 1.0
+     * @since 0.3.2
      */
     protected function getRootNodeName()
     {

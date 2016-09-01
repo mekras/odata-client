@@ -15,7 +15,7 @@ use Mekras\OData\Client\OData;
 /**
  * OData Entry properties.
  *
- * @since 1.0
+ * @since 0.3
  */
 class Properties extends Element implements \Iterator
 {
@@ -32,7 +32,7 @@ class Properties extends Element implements \Iterator
      * @param  Content  $parent  Parent node.
      * @param \DOMElement|null $element DOM element.
      *
-     * @since 1.0
+     * @since 0.3
      *
      * @throws \InvalidArgumentException If $element has invalid namespace.
      */
@@ -66,7 +66,7 @@ class Properties extends Element implements \Iterator
      * @throws \InvalidArgumentException
      * @throws \Mekras\OData\Client\Exception\LogicException If property already exist.
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function add($name, $value, $type = Primitive::STRING)
     {
@@ -86,7 +86,7 @@ class Properties extends Element implements \Iterator
      *
      * @return Primitive
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function get($name)
     {
@@ -100,7 +100,7 @@ class Properties extends Element implements \Iterator
      *
      * @return bool
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function has($name)
     {
@@ -112,7 +112,7 @@ class Properties extends Element implements \Iterator
      *
      * @return string
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function ns()
     {
@@ -176,7 +176,7 @@ class Properties extends Element implements \Iterator
      *
      * @return string
      *
-     * @since 1.0
+     * @since 0.3
      */
     protected function getNodeName()
     {

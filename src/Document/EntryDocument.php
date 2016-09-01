@@ -13,7 +13,7 @@ use Mekras\Atom\Extensions;
 /**
  * OData Service entry response.
  *
- * @since 1.0
+ * @since 0.3.2
  */
 class EntryDocument extends BaseEntryDocument
 {
@@ -25,7 +25,7 @@ class EntryDocument extends BaseEntryDocument
      *
      * @throws \InvalidArgumentException If $document root node has invalid name.
      *
-     * @since 1.0
+     * @since 0.3.2
      */
     public function __construct(Extensions $extensions, $document = null)
     {
@@ -44,7 +44,7 @@ class EntryDocument extends BaseEntryDocument
      *
      * @return \Mekras\OData\Client\Element\Entry
      *
-     * @since 1.0
+     * @since 0.3.2
      */
     public function getEntry()
     {

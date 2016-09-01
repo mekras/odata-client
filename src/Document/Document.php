@@ -15,7 +15,7 @@ use Mekras\OData\Client\OData;
 /**
  * OData document.
  *
- * @since 1.0
+ * @since 0.3
  */
 abstract class Document extends AtomPubDocument
 {
@@ -27,7 +27,7 @@ abstract class Document extends AtomPubDocument
      *
      * @throws \InvalidArgumentException If $document root node has invalid name.
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function __construct(Extensions $extensions, \DOMDocument $document = null)
     {
@@ -45,7 +45,7 @@ abstract class Document extends AtomPubDocument
      *
      * @return \DOMXPath
      *
-     * @since 1.0
+     * @since 0.3
      */
     protected function getXPath()
     {

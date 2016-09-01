@@ -8,11 +8,11 @@
 namespace Mekras\OData\Client\URI;
 
 /**
- * Property URI component
+ * Property URI component.
  *
- * @since 1.0
+ * @since 0.3
  *
- * @link  http://www.odata.org/documentation/odata-version-2-0/uri-conventions/
+ * @see  http://www.odata.org/documentation/odata-version-2-0/uri-conventions/
  */
 class Property extends UriComponent
 {
@@ -28,7 +28,7 @@ class Property extends UriComponent
      *
      * @param string $name Property name.
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function __construct($name)
     {
@@ -40,7 +40,7 @@ class Property extends UriComponent
      *
      * @return string
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function __toString()
     {
@@ -54,7 +54,7 @@ class Property extends UriComponent
      *
      * @return void
      *
-     * @since 1.0
+     * @since 0.3
      */
     public function value()
     {

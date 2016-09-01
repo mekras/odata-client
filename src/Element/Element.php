@@ -13,7 +13,7 @@ use Mekras\OData\Client\OData;
 /**
  * Abstract OData element.
  *
- * @since 1.0
+ * @since 0.3
  */
 abstract class Element extends BaseElement
 {
@@ -22,7 +22,7 @@ abstract class Element extends BaseElement
      *
      * @return \DOMXPath
      *
-     * @since 1.0
+     * @since 0.3
      */
     protected function getXPath()
     {
