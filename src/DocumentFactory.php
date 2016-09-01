@@ -7,8 +7,8 @@
  */
 namespace Mekras\OData\Client;
 
-use Mekras\Atom\Document\EntryDocument;
 use Mekras\AtomPub\DocumentFactory as BaseDocumentFactory;
+use Mekras\OData\Client\Document\EntryDocument;
 use Mekras\OData\Client\Element\Entry;
 use Mekras\OData\Client\Exception\LogicException;
 
