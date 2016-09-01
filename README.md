@@ -14,7 +14,6 @@ Supported OData versions:
 | [4.0](http://docs.oasis-open.org/odata/odata/v4.0/) | unknown
 | [3.0](http://www.odata.org/documentation/odata-version-3-0) | partial
 | [2.0](http://www.odata.org/documentation/odata-version-2-0/) | partial
-| 1.0 | partial
 
 
 - [Documentation](docs/index.en.md) (English)

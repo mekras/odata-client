@@ -98,7 +98,7 @@ class Service
     public function sendRequest($method, $uri, Document $document = null)
     {
         $headers = [
-            'DataServiceVersion' => '1.0',
+            'DataServiceVersion' => '2.0',
             'MaxDataServiceVersion' => '3.0',
             'Accept' => 'application/atom+xml,application/atomsvc+xml,application/xml'
         ];
