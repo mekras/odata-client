@@ -11,7 +11,7 @@ use Mekras\Atom\Document\EntryDocument as BaseEntryDocument;
 use Mekras\Atom\Extensions;
 
 /**
- * OData Service error response.
+ * OData Service entry response.
  *
  * @since 1.0
  */
