@@ -33,15 +33,18 @@ class DocumentFactory extends BaseDocumentFactory
     /**
      * Create new entity document object.
      *
-     * @param string $type Entity type.
+     * @param string $type Optional entity type. Do not forget to call
+     *                     {@see \Mekras\OData\Client\Element\Entry::setEntityType()} if omitting
+     *                     this argument.
      *
      * @return EntryDocument
      *
      * @throws \Mekras\OData\Client\Exception\LogicException
      *
+     * @since 0.3.4 $type made optional.
      * @since 0.3.2
      */
-    public function createEntityDocument($type)
+    public function createEntityDocument($type = null)
     {
         try {
             $document = $this->createDocument('atom:entry');
@@ -58,7 +61,9 @@ class DocumentFactory extends BaseDocumentFactory
             throw new LogicException('Unexpected entry type: ' . get_class($entry));
         }
 
-        $entry->setEntityType($type);
+        if ($type) {
+            $entry->setEntityType($type);
+        }
 
         return $document;
     }

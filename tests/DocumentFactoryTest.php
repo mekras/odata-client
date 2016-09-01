@@ -12,9 +12,9 @@ use Mekras\OData\Client\DocumentFactory;
 use Mekras\OData\Client\Element\Entry;
 
 /**
- * Tests for Mekras\OData\Client\DocumentFactory
+ * Tests for Mekras\OData\Client\DocumentFactory.
  *
- * @covers Mekras\OData\Client\DocumentFactory
+ * @covers \Mekras\OData\Client\DocumentFactory
  */
 class DocumentFactoryTest extends TestCase
 {
