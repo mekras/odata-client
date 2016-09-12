@@ -13,6 +13,7 @@ use Http\Message\RequestFactory;
 use Mekras\Atom\Document\Document;
 use Mekras\OData\Client\Document\ErrorDocument;
 use Mekras\OData\Client\Exception\ClientErrorException;
+use Mekras\OData\Client\Exception\NetworkException;
 use Mekras\OData\Client\Exception\RuntimeException;
 use Mekras\OData\Client\Exception\ServerErrorException;
 use Psr\Http\Message\ResponseInterface;
@@ -90,6 +91,7 @@ class Service
      * @throws \InvalidArgumentException If given document is not supported.
      * @throws \Mekras\Atom\Exception\RuntimeException In case of XML errors.
      * @throws \Mekras\OData\Client\Exception\ClientErrorException On client error.
+     * @throws \Mekras\OData\Client\Exception\NetworkException In case of network error.
      * @throws \Mekras\OData\Client\Exception\RuntimeException On other errors.
      * @throws \Mekras\OData\Client\Exception\ServerErrorException On server error.
      *
@@ -119,6 +121,8 @@ class Service
 
         try {
             $response = $this->httpClient->sendRequest($request);
+        } catch (HttpClientException\NetworkException $e) {
+            throw new NetworkException($e->getMessage(), $e->getCode(), $e);
         } catch (\Exception $e) {
             throw new RuntimeException($e->getMessage(), 0, $e);
         }

@@ -54,6 +54,7 @@ public function sendRequest(string $method, string $uri,
 - `\InvalidArgumentException` если тип документа $document не поддерживается.
 - `\Mekras\Atom\Exception\RuntimeException` в случае ошибок в XML, полученном от сервера.
 - `\Mekras\OData\Client\Exception\ClientErrorException` если сервер сообщает об ошибке клиента.
+- `\Mekras\OData\Client\Exception\NetworkException` в случае сетевых проблем.
 - `\Mekras\OData\Client\Exception\ServerErrorException` в случае ошибки на стороне сервера.
 - `\Mekras\OData\Client\Exception\RuntimeException` в остальных случаях.
 
