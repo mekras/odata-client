@@ -136,7 +136,7 @@ class Options
     /**
      * Select entries.
      *
-     * @param string $select Use Filter class to construct filter.
+     * @param string $select Select individual fields
      *
      * @return $this
      *
@@ -154,7 +154,7 @@ class Options
     /**
      * Expand entries.
      *
-     * @param string $expand Use Filter class to construct filter.
+     * @param string $expand Expand navigation properties
      *
      * @return $this
      *
