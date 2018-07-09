@@ -5,6 +5,7 @@
  * @author  Михаил Красильников <m.krasilnikov@yandex.ru>
  * @license MIT
  */
+
 namespace Mekras\OData\Client;
 
 use Http\Client\Exception as HttpClientException;
@@ -60,8 +61,8 @@ class Service
     /**
      * Creates new OData service proxy.
      *
-     * @param string         $serviceRootUri OData service root URI.
-     * @param HttpClient     $httpClient     HTTP client to use.
+     * @param string $serviceRootUri OData service root URI.
+     * @param HttpClient $httpClient HTTP client to use.
      * @param RequestFactory $requestFactory The HTTP request factory.
      *
      * @since 0.1
@@ -82,8 +83,8 @@ class Service
     /**
      * Perform actual HTTP request to service.
      *
-     * @param string   $method   HTTP method.
-     * @param string   $uri      URI.
+     * @param string $method HTTP method.
+     * @param string $uri URI.
      * @param Document $document Document to send to the server.
      *
      * @return Document
@@ -132,8 +133,66 @@ class Service
             throw new ServerErrorException('DataServiceVersion header missed');
         }
 
-        $doc = $this->documentFactory->parseXML((string) $response->getBody());
+        $doc = $this->documentFactory->parseXML((string)$response->getBody());
         $this->checkResponseForErrors($response, $doc);
+
+        return $doc;
+    }
+
+    /**
+     * Perform actual HTTP request to service using JSON format
+     *
+     * @param string $method HTTP method.
+     * @param string $uri URI.
+     * @param Document $document Document to send to the server.
+     *
+     * @return mixed
+     *
+     * @throws \InvalidArgumentException If given document is not supported.
+     * @throws \Mekras\Atom\Exception\RuntimeException In case of XML errors.
+     * @throws \Mekras\OData\Client\Exception\ClientErrorException On client error.
+     * @throws \Mekras\OData\Client\Exception\NetworkException In case of network error.
+     * @throws \Mekras\OData\Client\Exception\RuntimeException On other errors.
+     * @throws \Mekras\OData\Client\Exception\ServerErrorException On server error.
+     *
+     * @since 0.3
+     */
+    public function sendJsonRequest($method, $uri, Document $document = null)
+    {
+        $headers = [
+            'DataServiceVersion' => '2.0',
+            'MaxDataServiceVersion' => '3.0',
+            'Accept' => 'application/json'
+        ];
+
+        if ($document) {
+            $headers['Content-type'] = 'application/json';
+        }
+
+        $uri = str_replace($this->getServiceRootUri(), '', $uri);
+        $uri = '/' . ltrim($uri, '/');
+
+        $request = $this->requestFactory->createRequest(
+            $method,
+            $this->getServiceRootUri() . $uri,
+            $headers,
+            $document ? $document->getDomDocument()->saveXML() : null
+        );
+
+        try {
+            $response = $this->httpClient->sendRequest($request);
+        } catch (HttpClientException\NetworkException $e) {
+            throw new NetworkException($e->getMessage(), $e->getCode(), $e);
+        } catch (\Exception $e) {
+            throw new RuntimeException($e->getMessage(), 0, $e);
+        }
+
+        $version = $response->getHeaderLine('DataServiceVersion');
+        if ('' === $version) {
+            throw new ServerErrorException('DataServiceVersion header missed');
+        }
+
+        $doc = json_decode((string)$response->getBody());
 
         return $doc;
     }
@@ -167,7 +226,7 @@ class Service
      * Throw exception if server reports error.
      *
      * @param ResponseInterface $response
-     * @param Document          $document
+     * @param Document $document
      *
      * @throws \Mekras\OData\Client\Exception\ClientErrorException
      * @throws \Mekras\OData\Client\Exception\ServerErrorException

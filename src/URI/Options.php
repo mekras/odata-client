@@ -132,4 +132,40 @@ class Options
 
         return $this;
     }
+
+    /**
+     * Select entries.
+     *
+     * @param string $select Select individual fields
+     *
+     * @return $this
+     *
+     * @since 0.3
+     *
+     * @see   http://www.odata.org/documentation/odata-version-2-0/uri-conventions/#FilterSystemQueryOption
+     */
+    public function select($select)
+    {
+        $this->options['select'] = (string) $select;
+
+        return $this;
+    }
+
+    /**
+     * Expand entries.
+     *
+     * @param string $expand Expand navigation properties
+     *
+     * @return $this
+     *
+     * @since 0.3
+     *
+     * @see   http://www.odata.org/documentation/odata-version-2-0/uri-conventions/#FilterSystemQueryOption
+     */
+    public function expand($expand)
+    {
+        $this->options['expand'] = (string) $expand;
+
+        return $this;
+    }
 }
